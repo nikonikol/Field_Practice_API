@@ -1,6 +1,6 @@
 var express = require('express')
 
-var infoquery = require('./demo1')
+var infoquery = require('./mysql')
 //var testdata = require('./modules/testdata')
 
 //加载文件
@@ -45,7 +45,7 @@ router.get('/Ischecklogin', function (req, res) {
         err_code: 0,
         message: 'data'
     })
-
+ 
 })
 
 router.post('/Ischecklogin', function (req, res) {
@@ -128,12 +128,49 @@ router.post('/Student_infom', function (req, res){
     }
 
 })
-//把router导出
 
+//保存任务信息到数据库
+router.post('/SaveTask_infom', function (req, res){
+    console.log(1)
+    var FromTime=req.body.FromTime
+    var EndTime=req.body.EndTime
+    
+    var TaskName=req.body.TaskName
+    var Class=req.body.Class
+    var Adress=req.body.Adress
+    var TaskContent=req.body.TaskContent
+    //number
+    var Sponsor=req.body.Sponsor
+    var TaskState=req.body.TaskState
+    console.log(req.body)
+    try{
 
+        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Adress,TaskContent,Sponsor,TaskState) VALUES('"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Adress+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                return res.status(500).json({
+                    code:0,
+                    error: err,
+                    message: ""
+                })
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
 
   
 
 
-
+//把router导出
 module.exports = router
