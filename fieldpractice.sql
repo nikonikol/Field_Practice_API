@@ -11,7 +11,7 @@
  Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 22/05/2019 14:27:11
+ Date: 22/05/2019 23:59:25
 */
 
 SET NAMES utf8mb4;
@@ -38,16 +38,15 @@ CREATE TABLE `location`  (
   `UserId` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `LastTime` datetime(0) NOT NULL,
   `Location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `TaskId` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of location
 -- ----------------------------
-INSERT INTO `location` VALUES (1, '5120160000', '2019-05-22 13:38:24', '{[{\"log\":1212,\"lat\":5656.45},{\"log\":1212,\"lat\":5656.45},{\"log\":1212,\"lat\":5656.45}]}');
-INSERT INTO `location` VALUES (2, '5120160000', '2019-07-02 23:34:10', '');
-INSERT INTO `location` VALUES (3, '5120160000', '2019-07-02 23:34:10', '[object Object],[object Object],[object Object]');
-INSERT INTO `location` VALUES (4, '5120160000', '2019-07-02 23:34:10', '[object Object],[object Object],[object Object]');
+INSERT INTO `location` VALUES (3, '5120160000', '2019-07-02 23:34:10', '[object Object],[object Object],[object Object]', '3');
+INSERT INTO `location` VALUES (4, '5120160000', '2019-07-02 23:34:10', '[object Object],[object Object],[object Object]', '4');
 
 -- ----------------------------
 -- Table structure for studentinfo
@@ -59,7 +58,7 @@ CREATE TABLE `studentinfo`  (
   `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `nickname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `class` varchar(15) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role` int(5) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -68,15 +67,20 @@ CREATE TABLE `studentinfo`  (
 -- Records of studentinfo
 -- ----------------------------
 INSERT INTO `studentinfo` VALUES ('5120160000', '管理员', '123', 'admin', '1', '地理信息科学1603', 0);
+INSERT INTO `studentinfo` VALUES ('5120160001', '李明崴', '123', 'sb', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg', '地信1603', 0);
+INSERT INTO `studentinfo` VALUES ('5120160002', '李明崴', '123', 'sb', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg', '地信1603,地信1602', 0);
+INSERT INTO `studentinfo` VALUES ('5120160003', '李明崴12', '123', 'sb', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg', '地信1603,地信1602', 0);
+INSERT INTO `studentinfo` VALUES ('5120160004', '李明崴12', '123', 'sb', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg', '地信1603', 0);
+INSERT INTO `studentinfo` VALUES ('T001', '李明崴', '123', 'sb', 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg', '地信1603,地信1602', 1);
 
 -- ----------------------------
 -- Table structure for tasktable
 -- ----------------------------
 DROP TABLE IF EXISTS `tasktable`;
 CREATE TABLE `tasktable`  (
-  `TaskId` int(20) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT,
-  `FromTime` datetime(6) NULL DEFAULT NULL,
-  `EndTime` datetime(6) NULL DEFAULT NULL,
+  `TaskId` int(20) UNSIGNED NOT NULL,
+  `FromTime` datetime(6) NOT NULL,
+  `EndTime` datetime(6) NOT NULL,
   `TaskName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `Class` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `Address` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -89,13 +93,9 @@ CREATE TABLE `tasktable`  (
 -- ----------------------------
 -- Records of tasktable
 -- ----------------------------
-INSERT INTO `tasktable` VALUES (00000000000000000001, '2019-05-02 23:34:10.000000', '2019-05-14 23:34:16.000000', 'niko', '地信1603', '西科大', '地址探查', '5120160000', 0);
-INSERT INTO `tasktable` VALUES (00000000000000000002, '2019-05-14 23:36:02.000000', '2019-05-31 23:36:06.000000', 'cxz', '地信1602', '西科大', '画画', '5120160000', 1);
-INSERT INTO `tasktable` VALUES (00000000000000000003, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
-INSERT INTO `tasktable` VALUES (00000000000000000004, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
-INSERT INTO `tasktable` VALUES (00000000000000000005, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
-INSERT INTO `tasktable` VALUES (00000000000000000006, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
-INSERT INTO `tasktable` VALUES (00000000000000000007, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
-INSERT INTO `tasktable` VALUES (00000000000000000008, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
+INSERT INTO `tasktable` VALUES (3, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1603', '绵阳', '三调', '5120160000', 0);
+INSERT INTO `tasktable` VALUES (9, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
+INSERT INTO `tasktable` VALUES (10, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
+INSERT INTO `tasktable` VALUES (11, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
