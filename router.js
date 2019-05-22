@@ -39,16 +39,8 @@ console.log('jiazai')
 
 //返回是否成功，接收数据为账号和密码
 
-router.get('/Ischecklogin', function (req, res) {
-    console.log('ok')
-    return res.status(200).json({
-        err_code: 0,
-        message: 'data'
-    })
- 
-})
 
-router.post('/Ischecklogin', function (req, res) {
+router.post('/IscheckLogin', function (req, res) {
 
     console.log(req.body)
     var username=req.body.username
@@ -89,7 +81,7 @@ router.post('/Ischecklogin', function (req, res) {
 })
 
 //由学生学号，查询学生全部信息，并返回。
-router.post('/Student_infom', function (req, res){
+router.post('/StudentInfom', function (req, res){
     var username=req.body.username
     console.log(req.body)
     try{
@@ -101,7 +93,7 @@ router.post('/Student_infom', function (req, res){
             else{
                 if(data[0]!=undefined){
 
-                    return res.status(500).json({
+                    return res.status(200).json({
                         code:0,
                         error: '',
                         message: data[0]
@@ -109,7 +101,7 @@ router.post('/Student_infom', function (req, res){
                    
                 } 
                 else{
-                    return res.status(500).json({
+                    return res.status(200).json({
                         code:1,
                         error: err,
                         message: ""
@@ -130,14 +122,14 @@ router.post('/Student_infom', function (req, res){
 })
 
 //保存任务信息到数据库
-router.post('/SaveTask_infom', function (req, res){
-    console.log(1)
+router.post('/SaveTaskInfom', function (req, res){
+
     var FromTime=req.body.FromTime
     var EndTime=req.body.EndTime
     
     var TaskName=req.body.TaskName
     var Class=req.body.Class
-    var Adress=req.body.Adress
+    var Address=req.body.Address
     var TaskContent=req.body.TaskContent
     //number
     var Sponsor=req.body.Sponsor
@@ -145,7 +137,41 @@ router.post('/SaveTask_infom', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Adress,TaskContent,Sponsor,TaskState) VALUES('"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Adress+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
+        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Address+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                return res.status(200).json({
+                    code:0,
+                    error: err,
+                    message: ""
+                })
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+//保存坐标信息到数据库
+router.post('/SaveLocationInfom', function (req, res){
+
+    var UserId=req.body.UserId
+    var LastTime=req.body.LastTime
+    
+    var Location=req.body.Location
+    
+    console.log(req.body)
+    try{
+
+        infoquery("INSERT INTO Location (UserId,LastTime,Location) VALUES('"+UserId+"','"+LastTime+"','"+Location+"')" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -169,7 +195,47 @@ router.post('/SaveTask_infom', function (req, res){
 
 })
 
-  
+
+//由学生学号，查询学生查询位置信息全部信息，并返回。
+router.post('/SearchLocation', function (req, res){
+    var UserId=req.body.UserId
+    console.log(req.body)
+    try{
+
+        infoquery("SELECT * FROM Location WHERE UserId='"+UserId+"'" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(data[0]!=undefined){
+
+                    return res.status(200).json({
+                        code:0,
+                        error: '',
+                        message: data[0]
+                    })
+                   
+                } 
+                else{
+                    return res.status(200).json({
+                        code:1,
+                        error: err,
+                        message: ""
+                    })
+                }
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
 
 
 //把router导出
