@@ -124,6 +124,7 @@ router.post('/StudentInfom', function (req, res){
 //保存任务信息到数据库
 router.post('/SaveTaskInfom', function (req, res){
 
+    var TaskId=req.body.TaskId
     var FromTime=req.body.FromTime
     var EndTime=req.body.EndTime
     
@@ -137,7 +138,7 @@ router.post('/SaveTaskInfom', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Address+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
+        infoquery("INSERT INTO tasktable (TaskId,FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('"+TaskId+"','"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Address+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -196,13 +197,31 @@ router.post('/SaveLocationInfom', function (req, res){
 })
 
 
-//由学生学号，查询学生查询位置信息全部信息，并返回。
+//由任务ID，查询学生查询位置信息全部信息，并返回。
+
+
 router.post('/SearchLocation', function (req, res){
-    var UserId=req.body.UserId
+    var TaskId=req.body.TaskId
+    var sql =null
     console.log(req.body)
     try{
-
-        infoquery("SELECT * FROM Location WHERE UserId='"+UserId+"'" ,function(err,data){
+        sql =`SELECT
+        studentinfo.name,
+        studentinfo.nickname,
+        studentinfo.icon,
+        studentinfo.class,
+        studentinfo.role,
+        location.LastTime,
+        location.Location 
+    FROM
+        tasktable,
+        location,
+        studentinfo 
+    WHERE
+        tasktable.TaskId = "`+TaskId+`"
+        AND tasktable.TaskId = location.TaskId 
+        AND tasktable.Class = studentinfo.class`
+        infoquery(sql ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -212,7 +231,7 @@ router.post('/SearchLocation', function (req, res){
                     return res.status(200).json({
                         code:0,
                         error: '',
-                        message: data[0]
+                        message: data
                     })
                    
                 } 
@@ -237,6 +256,43 @@ router.post('/SearchLocation', function (req, res){
 
 })
 
+//保存用户信息到数据库
+router.post('/SaveInfom', function (req, res){
+
+    var id=req.body.Id
+    var name=req.body.name
+    var pasword=req.body.pasword
+    var nickname=req.body.nickname
+    var icon=req.body.icon  
+    var classs =req.body.class
+    var role=req.body.role
+    
+    console.log(req.body)
+    try{
+
+        infoquery("INSERT INTO studentinfo (id,name,password,nickname,icon,class,role) VALUES('"+id+"','"+name+"','"+pasword+"','"+nickname+"','"+icon+"','"+classs+"',"+role+")" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                return res.status(200).json({
+                    code:0,
+                    error: err,
+                    message: ""
+                })
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
 
 //把router导出
 module.exports = router
