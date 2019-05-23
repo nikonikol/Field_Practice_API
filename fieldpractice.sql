@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost_3306
+ Source Server         : zmmmm
  Source Server Type    : MySQL
  Source Server Version : 80015
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 22/05/2019 23:59:25
+ Date: 23/05/2019 23:30:00
 */
 
 SET NAMES utf8mb4;
@@ -36,17 +36,19 @@ DROP TABLE IF EXISTS `location`;
 CREATE TABLE `location`  (
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `UserId` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `LastTime` datetime(0) NOT NULL,
+  `LastTime` datetime(6) NULL DEFAULT NULL,
   `Location` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `TaskId` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`Id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of location
 -- ----------------------------
-INSERT INTO `location` VALUES (3, '5120160000', '2019-07-02 23:34:10', '[object Object],[object Object],[object Object]', '3');
-INSERT INTO `location` VALUES (4, '5120160000', '2019-07-02 23:34:10', '[object Object],[object Object],[object Object]', '4');
+INSERT INTO `location` VALUES (4, '5120160000', '2019-07-02 23:34:10.000000', '[object Object],[object Object],[object Object]', '4');
+INSERT INTO `location` VALUES (5, 'T001', '2019-07-02 00:00:00.000000', '[object Object],[object Object],[object Object]', NULL);
+INSERT INTO `location` VALUES (6, 'T001', '2019-07-02 00:00:00.000000', '[object Object]', NULL);
+INSERT INTO `location` VALUES (7, 'T001', '2019-07-02 00:00:00.000000', '[object Object]', NULL);
 
 -- ----------------------------
 -- Table structure for studentinfo
@@ -79,8 +81,8 @@ INSERT INTO `studentinfo` VALUES ('T001', '李明崴', '123', 'sb', 'https://tim
 DROP TABLE IF EXISTS `tasktable`;
 CREATE TABLE `tasktable`  (
   `TaskId` int(20) UNSIGNED NOT NULL,
-  `FromTime` datetime(6) NOT NULL,
-  `EndTime` datetime(6) NOT NULL,
+  `FromTime` datetime(6) NULL,
+  `EndTime` datetime(6) NULL,
   `TaskName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `Class` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `Address` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
@@ -97,5 +99,7 @@ INSERT INTO `tasktable` VALUES (3, '2019-05-02 23:34:10.000000', '2019-07-02 23:
 INSERT INTO `tasktable` VALUES (9, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
 INSERT INTO `tasktable` VALUES (10, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
 INSERT INTO `tasktable` VALUES (11, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda', '地信1601', '绵阳', '三调', '5120160000', 0);
+INSERT INTO `tasktable` VALUES (12, '2019-05-02 23:34:10.000000', '2019-07-02 23:34:10.000000', 'sda11', '地信1601', 'undefined', '三调', '5120160000', 0);
+INSERT INTO `tasktable` VALUES (52, '2019-05-23 20:22:41.000000', '2019-05-24 20:22:41.000000', '哈哈哈', '地信1603', 'undefined', '家家户户', 'T001', 0);
 
 SET FOREIGN_KEY_CHECKS = 1;
