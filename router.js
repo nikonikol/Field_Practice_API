@@ -124,7 +124,6 @@ router.post('/StudentInfom', function (req, res){
 //保存任务信息到数据库
 router.post('/SaveTaskInfom', function (req, res){
 
-    var TaskId=req.body.TaskId
     var FromTime=req.body.FromTime
     var EndTime=req.body.EndTime
     
@@ -138,7 +137,7 @@ router.post('/SaveTaskInfom', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("INSERT INTO tasktable (TaskId,FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('"+TaskId+"','"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Address+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
+        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Address+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -168,11 +167,11 @@ router.post('/SaveLocationInfom', function (req, res){
     var LastTime=req.body.LastTime
     
     var Location=req.body.Location
-    
+    var TaskId=req.body.TaskId
     console.log(req.body)
     try{
 
-        infoquery("INSERT INTO Location (UserId,LastTime,Location) VALUES('"+UserId+"','"+LastTime+"','"+Location+"')" ,function(err,data){
+        infoquery("INSERT INTO Location (UserId,LastTime,Location,TaskId) VALUES('"+UserId+"','"+LastTime+"','"+Location+"',+'"+TaskId+"')" ,function(err,data){
             if(err){
                 console.log(err)
             }
