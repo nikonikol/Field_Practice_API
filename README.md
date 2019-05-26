@@ -42,6 +42,8 @@
 
 ## SaveTaskInfom
 + {
+
+	"TaskId": "2",
 	"FromTime": "2019-05-02 23:34:10.000000",
 	"EndTime": "2019-07-02 23:34:10.000000",
 	"TaskName":"sda",
@@ -59,10 +61,9 @@
 ## SaveLocationInfom
 + 
 	{
-	"UserId": "5120160100",
+	"UserId": "5120160000",
 	"LastTime":"2019-07-02 23:34:10.000000",
-    "Location":[{"log":1212,"lat":5656.45},{"log":1212,"lat":5656.45},{"log":1212,"lat":5656.45}],
-    "TaskId": "3"
+    "Location":[{"log":1212,"lat":5656.45},{"log":1212,"lat":5656.45},{"log":1212,"lat":5656.45}]
 }
 + {
     "code": 0,
