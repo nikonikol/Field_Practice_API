@@ -293,5 +293,61 @@ router.post('/SaveInfom', function (req, res){
 
 })
 
+//发送班级信息返回班级里所有的实习任务
+router.post('/ClassAllTask', function (req, res){
+    //console.log()
+    var Class=req.body.Class
+    var sql=null
+    //console.log(Class)
+    try{
+        sql=`SELECT
+        tasktable.FromTime,
+        tasktable.EndTime,
+        tasktable.TaskName,
+        tasktable.Class,
+        tasktable.Address,
+        tasktable.TaskContent,
+        tasktable.Sponsor,
+        tasktable.TaskState,
+        tasktable.TaskId
+    FROM
+        tasktable
+    WHERE
+        tasktable.Class="`+Class+`"`      
+        infoquery( sql,function(err,data){
+            if(err){
+                //console.log(err)
+            }
+            else{
+                if(data[0]!=undefined){
+                    
+                    return res.status(200).json({
+                        code:0,
+                        error: '',
+                        message: data
+                    })
+                   
+                } 
+                else{
+                    return res.status(200).json({
+                        code:1,
+                        error: err,
+                        message: ""
+                    })
+                }
+            }
+        })
+    }
+    catch(err){
+        //console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+
 //把router导出
 module.exports = router

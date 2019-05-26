@@ -115,3 +115,20 @@
 	"class":["地信1603"],
 	"role":0
 }
+
+
+## ClassAllTask
++ {
+    "class":"地信1603"
+}
++ {
+    "FromTime": "2019-05-02T15:34:10.000Z",
+            "EndTime": "2019-07-02T15:34:10.000Z",
+            "TaskName": "sda",
+            "Class": "地信1601",
+            "Address": "绵阳",
+            "TaskContent": "三调",
+            "Sponsor": "5120160000",
+            "TaskState": 0,
+            "TaskId": 9
+}
