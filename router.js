@@ -1,297 +1,286 @@
-var express = require('express')
-
-var infoquery = require('./mysql')
-//var testdata = require('./modules/testdata')
-
-//加载文件
+/**
+ * router.js路由模块
+ * 职责
+ *  处理路由
+ *  根据不同请求响应url
+ */
 var fs = require('fs')
+//Express提供了一个更好的方式
+//专门包装路由
+var express = require('express')
+var Student = require('./student')
+var Userinformation = require('./login')
+var Data = require('./data')
+var MongodbData = require('./mongodbdata')
 
+//1.创建一个路由容器
 var router = express.Router()
-
-
-
-
-console.log('jiazai')
-// router.get('/test', function (req, res) {
-//     //console.log(req.query)
-//     testdata.find({
-//         dataname:'Tem',
-//         data:123
-//     },function(err,data){
+//2.把路由都挂在到router路由容器中
+// router.get('/', function(req,res){
+//     //readFile 的第二个可选参数，传入utm8 即可不用tostring()
+//     fs.readFile('./db.json',"utf8",function(err,data){
 //         if(err){
-//             return res.status(500).json({
-//                 err_code: 500,
-//                 message: err.message
-//             })           
+//             return res.status(500).send('Server error')
 //         }
-//         console.log(data)
-//         res.status(200).json({
-//             err_code: 0,
-//             message: data
+//         res.render('index.html',{
+//             students: JSON.parse(data).students,
+//             imgs:JSON.parse(data).imgs
 //         })
-
 //     })
 
-//    // res.redirect('/students')
+// })
+var newdata1 = {
+    data: 100,
+    datatime: "2019/01/01 14:00",
+    dataname: "Tem"
+}
 
+// router.get('/newnew',function(req,res){
+//     new MongodbData(newdata1).save(function(err){
+//         if (err) 
+//         {
+//             return res.status(500).send(err)
+//         }
+//        console.log('写入成功')
+//     })
 // })
 
+router.get('/datarefresh', function (req, res) {
 
-//返回是否成功，接收数据为账号和密码
-
-
-router.post('/IscheckLogin', function (req, res) {
-
-    console.log(req.body)
-    var username=req.body.username
-    var userpsd=req.body.password
-    try {
-        infoquery("SELECT * FROM studentinfo WHERE id='"+username+"'AND password='"+userpsd+"'" ,function(err,data){
-            if(err){
-                console.log(err)
-            }
-            else{
-                if(data[0]!=undefined){
-                    console.log(data[0])
-                    return res.status(200).json({
-                        code:0,
-                        error:"",
-                        message: data[0]
-                    })
-                } 
-                else{
-                    return res.status(200).json({
-                        code:1,
-                        error:err,
-                        message: ''
-                    })
-                }
-            }
-        })
-        //console.log(a)
-    } catch (err) {
-        console.log('err')
-        res.status(500).json({
-            code:2,
-            error:err.message,
-            message: ''
-        })
-    }
-
-})
-
-//由学生学号，查询学生全部信息，并返回。
-router.post('/StudentInfom', function (req, res){
-    var username=req.body.username
-    console.log(req.body)
-    try{
-
-        infoquery("SELECT * FROM studentinfo WHERE id='"+username+"'" ,function(err,data){
-            if(err){
-                console.log(err)
-            }
-            else{
-                if(data[0]!=undefined){
-
-                    return res.status(200).json({
-                        code:0,
-                        error: '',
-                        message: data[0]
-                    })
-                   
-                } 
-                else{
-                    return res.status(200).json({
-                        code:1,
-                        error: err,
-                        message: ""
-                    })
-                }
-            }
-        })
-    }
-    catch(err){
-        console.log('err')
-        res.status(500).json({
-            code:2,
-            err: err.message,
-            message: ''
-        })
-    }
-
-})
-
-//保存任务信息到数据库
-router.post('/SaveTaskInfom', function (req, res){
-
-    var FromTime=req.body.FromTime
-    var EndTime=req.body.EndTime
+    //获取现在的时间，并转化为ISO时间格式
+    var d = new Date();
+    d.setHours(d.getHours(), d.getMinutes() - d.getTimezoneOffset());
+    //获取现在的时间戳，并减轻一分钟
+    var time = Date.parse(new Date(d)) / 1000;
+    time1=time-60  
+    //将我们减去的时间戳转化为ISO格式
+    var newDate = new Date(); 
+    newDate.setTime(time1 * 1000);
     
-    var TaskName=req.body.TaskName
-    var Class=req.body.Class
-    var Address=req.body.Address
-    var TaskContent=req.body.TaskContent
-    //number
-    var Sponsor=req.body.Sponsor
-    var TaskState=req.body.TaskState
-    console.log(req.body)
-    try{
-
-        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('"+FromTime+"','"+EndTime+"','"+TaskName+"','"+Class+"','"+Address+"','"+TaskContent+"','"+Sponsor+"',"+TaskState+")" ,function(err,data){
-            if(err){
-                console.log(err)
-            }
-            else{
-                return res.status(200).json({
-                    code:0,
-                    error: err,
-                    message: ""
-                })
-            }
+    MongodbData.find({"datatime" : {"$gte":newDate,"$lte":d}},function (err, mongodbDatas) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        //console.log(mongodbDatas)
+        res.render('customer.html', {
+            mongodbdata: mongodbDatas
         })
-    }
-    catch(err){
-        console.log('err')
-        res.status(500).json({
-            code:2,
-            err: err.message,
-            message: ''
-        })
-    }
+    })
 
 })
-//保存坐标信息到数据库
-router.post('/SaveLocationInfom', function (req, res){
 
-    var UserId=req.body.UserId
-    var LastTime=req.body.LastTime
+
+router.get('/customer', function (req, res) {
+
+
+
+    //获取现在的时间，并转化为ISO时间格式
+    var d = new Date();
+    d.setHours(d.getHours(), d.getMinutes() - d.getTimezoneOffset());
+    //获取现在的时间戳，并减轻一分钟
+    var time = Date.parse(new Date(d)) / 1000;
+    time1=time-60  
+    //将我们减去的时间戳转化为ISO格式
+    var newDate = new Date(); 
+    newDate.setTime(time1 * 1000);
     
-    var Location=req.body.Location
-    var TaskId=req.body.TaskId
-    console.log(req.body)
-    try{
-
-        infoquery("INSERT INTO Location (UserId,LastTime,Location,TaskId) VALUES('"+UserId+"','"+LastTime+"','"+Location+"',+'"+TaskId+"')" ,function(err,data){
-            if(err){
-                console.log(err)
-            }
-            else{
-                return res.status(200).json({
-                    code:0,
-                    error: err,
-                    message: ""
-                })
-            }
-        })
-    }
-    catch(err){
-        console.log('err')
-        res.status(500).json({
-            code:2,
-            err: err.message,
-            message: ''
-        })
-    }
-
-})
 
 
-//由任务ID，查询学生查询位置信息全部信息，并返回。
-
-
-router.post('/SearchLocation', function (req, res){
-    var TaskId=req.body.TaskId
-    var sql =null
-    console.log(req.body)
-    try{
-        sql =`SELECT
-        studentinfo.name,
-        studentinfo.nickname,
-        studentinfo.icon,
-        studentinfo.class,
-        studentinfo.role,
-        location.LastTime,
-        location.Location 
-    FROM
-        tasktable,
-        location,
-        studentinfo 
-    WHERE
-        tasktable.TaskId = "`+TaskId+`"
-        AND tasktable.TaskId = location.TaskId 
-        AND tasktable.Class = studentinfo.class`
-        infoquery(sql ,function(err,data){
-            if(err){
-                console.log(err)
-            }
-            else{
-                if(data[0]!=undefined){
-
-                    return res.status(200).json({
-                        code:0,
-                        error: '',
-                        message: data
-                    })
-                   
-                } 
-                else{
-                    return res.status(200).json({
-                        code:1,
-                        error: err,
-                        message: ""
-                    })
-                }
-            }
-        })
-    }
-    catch(err){
-        console.log('err')
-        res.status(500).json({
-            code:2,
-            err: err.message,
-            message: ''
-        })
-    }
-
-})
-
-//保存用户信息到数据库
-router.post('/SaveInfom', function (req, res){
-
-    var id=req.body.Id
-    var name=req.body.name
-    var pasword=req.body.pasword
-    var nickname=req.body.nickname
-    var icon=req.body.icon  
-    var classs =req.body.class
-    var role=req.body.role
     
-    console.log(req.body)
-    try{
-
-        infoquery("INSERT INTO studentinfo (id,name,password,nickname,icon,class,role) VALUES('"+id+"','"+name+"','"+pasword+"','"+nickname+"','"+icon+"','"+classs+"',"+role+")" ,function(err,data){
-            if(err){
-                console.log(err)
-            }
-            else{
-                return res.status(200).json({
-                    code:0,
-                    error: err,
-                    message: ""
-                })
-            }
+    MongodbData.find({"datatime" : {"$gte":newDate,"$lte":d}},function (err, mongodbDatas) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        //console.log(mongodbDatas)
+        res.render('customer.html', {
+            mongodbdata: mongodbDatas
         })
-    }
-    catch(err){
-        console.log('err')
-        res.status(500).json({
-            code:2,
-            err: err.message,
-            message: ''
-        })
-    }
+    })
 
 })
+
+router.get('/login', function (req, res) {
+    Student.find(function (err, students) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        res.render('login.html')
+    })
+
+})
+
+router.post('/login', function (req, res) {
+    Userinformation.findOne(req.body, function (err, ret) {
+        if (err) {
+            console.log('查询失败')
+
+        }
+        console.log('查询成功')
+        if (ret === null) {
+            console.log('登陆失败')
+        } else {
+            console.log('登陆成功')
+            res.redirect('/index')
+        }
+    })
+
+})
+
+router.get('/signin', function (req, res) {
+    res.render('new.html')
+})
+
+router.post('/signin', function (req, res) {
+    new Userinformation(req.body).save(function (err, ret) {
+        if (err) {
+            console.log('注册失败')
+            console.log(ret)
+
+        } else {
+            console.log('注册成功')
+            console.log(ret)
+            res.redirect('/login')
+        }
+
+    })
+
+})
+
+router.get('/zhuce', function (req, res) {
+    new Data({
+        dataname: "at",
+        data: "0",
+        datatime: "2018-07-06 21:12:59.856"
+    }).save(function (err, ret) {
+        if (err) {
+            console.log('数据添加失败')
+            console.log(ret)
+
+        } else {
+            console.log('数据添加成功')
+            console.log(ret)
+            res.redirect('/login')
+        }
+
+    })
+
+})
+
+
+router.get('/index', function (req, res) {
+    res.render('customer.html')
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+router.get('/students', function (req, res) {
+    Student.find(function (err, students) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        res.render('index.html', {
+            students: students
+        })
+    })
+
+})
+router.get('/students/new', function (req, res) {
+    res.render('new.html')
+
+})
+router.post('/students/new', function (req, res) {
+
+    new Student(req.body).save(function (err) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        res.redirect('/students')
+    })
+})
+//将数据保存到db.json    
+//像读取出来 转成对象
+//在对象中push数据
+//然后把对象转化为字符串
+//再将字符串储存起来   
+
+router.get('/students/edit', function (req, res) {
+
+    Student.findById(req.query.id, function (err, student) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        res.render('edit.html', {
+            studentedit: student
+        })
+    })
+
+
+})
+router.post('/students/edit', function (req, res) {
+
+    console.log(req.body)
+    console.log(req.body.id)
+    Student.findByIdAndUpdate(req.body.id, req.body, function (err) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        res.redirect('/students')
+    })
+
+})
+router.get('/students/delete', function (req, res) {
+
+
+    Student.findByIdAndRemove(req.query.id, function (err) {
+        if (err) {
+            return res.status(500).send('Server error')
+        }
+        res.redirect('/students')
+    })
+})
+
+
+
 
 //把router导出
 module.exports = router
