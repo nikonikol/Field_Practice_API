@@ -164,25 +164,107 @@ router.post('/SaveTaskInfom', function (req, res){
 router.post('/SaveLocationInfom', function (req, res){
 
     var UserId=req.body.UserId
-    var LastTime=req.body.LastTime
-    
+    var LastTime=req.body.LastTime   
     var Location=req.body.Location
     var TaskId=req.body.TaskId
     console.log(req.body)
+    sql =`SELECT
+    location.Location
+    FROM
+    location
+    WHERE
+    location.TaskId = "`+TaskId+`" AND
+    location.UserId = "`+UserId+`"`
+
     try{
 
-        infoquery("INSERT INTO Location (UserId,LastTime,Location,TaskId) VALUES('"+UserId+"','"+LastTime+"','"+Location+"',+'"+TaskId+"')" ,function(err,data){
+        infoquery(sql ,function(err,data){
             if(err){
                 console.log(err)
             }
             else{
-                return res.status(200).json({
-                    code:0,
-                    error: err,
-                    message: ""
-                })
+                if(data[0]!=undefined){
+                //如果已经有记录，则进行修改
+                //查询到的'{"count":0,"location":[{"log":1212,"lat":5656.45}]}'
+                var querlocation = data[0].Location
+                //转成JSON对象
+                var locationobject =JSON.parse(data[0].Location)
+                //count进行计数
+                locationobject.count= locationobject.count+1
+                //再数组中插入所查询的值
+                locationobject.location.push(JSON.parse(Location))
+                
+                console.log(locationobject.count)
+                console.log(locationobject.location)
+                Location=JSON.stringify(locationobject)
+                Location=JSON.stringify(Location)
+                console.log(Location)
+                updatesql = `UPDATE Location SET Location=`+Location+` WHERE location.TaskId = "`+TaskId+`" AND location.UserId = "`+UserId+`"`
+                infoquery(updatesql ,function(err,data){
+                   
+                    if(err){
+                        console.log(err)
+                    }
+                    else{
+                        return res.status(200).json({
+                            code:0,
+                            error: err,
+                            message: ""
+                        })
+                    }
+                })  
+
+                
+                } 
+                else{
+                  
+                //如果没有查询到信息，则直接插入
+                //修改JSON
+                Location = `{"count":1,"location":[`+Location+`]}`
+                console.log(Location)
+
+                  infoquery("INSERT INTO Location (UserId,LastTime,Location,TaskId) VALUES('"+UserId+"','"+LastTime+"','"+Location+"',+'"+TaskId+"')" ,function(err,data){
+                    if(err){
+                        console.log(err)
+                    }
+                    else{
+                        return res.status(200).json({
+                            code:0,
+                            error: err,
+                            message: ""
+                        })
+                    }
+                })    
+
+                  
+                }
             }
         })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
     catch(err){
         console.log('err')
