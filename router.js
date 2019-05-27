@@ -204,22 +204,24 @@ router.post('/SearchLocation', function (req, res){
     var sql =null
     console.log(req.body)
     try{
+
         sql =`SELECT
         studentinfo.name,
         studentinfo.nickname,
         studentinfo.icon,
         studentinfo.class,
         studentinfo.role,
+        location.UserId,
         location.LastTime,
-        location.Location 
-    FROM
-        tasktable,
-        location,
-        studentinfo 
-    WHERE
-        tasktable.TaskId = "`+TaskId+`"
-        AND tasktable.TaskId = location.TaskId 
-        AND tasktable.Class = studentinfo.class`
+        location.Location,
+        location.TaskId
+        FROM
+        studentinfo ,
+        location
+        WHERE
+        location.TaskId = "`+TaskId+`" AND
+        location.UserId = studentinfo.id`
+        
         infoquery(sql ,function(err,data){
             if(err){
                 console.log(err)

@@ -79,22 +79,15 @@
     "error": "",
     "message": [
         {
-            "name": "李明崴",
-            "nickname": "sb",
-            "icon": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg",
-            "class": "地信1603",
+            "name": "管理员",
+            "nickname": "admin",
+            "icon": "1",
+            "class": "地理信息科学1603",
             "role": 0,
+            "UserId": "5120160000",
             "LastTime": "2019-07-02T15:34:10.000Z",
-            "Location": "[object Object],[object Object],[object Object]"
-        },
-        {
-            "name": "李明崴12",
-            "nickname": "sb",
-            "icon": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558546245284&di=38f27b13fdf6f6940fd6fa2be952c38e&imgtype=0&src=http%3A%2F%2Fphoto.16pic.com%2F00%2F47%2F87%2F16pic_4787818_b.jpg",
-            "class": "地信1603",
-            "role": 0,
-            "LastTime": "2019-07-02T15:34:10.000Z",
-            "Location": "[object Object],[object Object],[object Object]"
+            "Location": "[object Object],[object Object],[object Object]",
+            "TaskId": "4"
         }
     ]
 }
@@ -119,7 +112,7 @@
 
 ## ClassAllTask
 + {
-    "class":"地信1603"
+    "Class":"地信1603"
 }
 + {
     "FromTime": "2019-05-02T15:34:10.000Z",
