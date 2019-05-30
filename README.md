@@ -125,3 +125,30 @@
             "TaskState": 0,
             "TaskId": 9
 }
+
+##SubmitExam
++ {
+    "TestName": "5120160100",
+    "TaskId": 5,
+    "Content": "waiwai is shabi",
+    "TotalGrade": "5120160100",
+    "Deadtime":"2019-07-02 23:34:10.000000"
+}
++ {
+    "code": 0,
+    "error": null,
+    "message": ""
+}
+##Studentsubmit
++ {
+    "UserId": "5120160100",
+    "TaskId": 5,
+    "TestId": 5,
+    "SubmitTime": "2019-07-02 23:34:10.000000",
+    "Answer": "歪歪真是个小可爱"
+}
++ {
+    "code": 0,
+    "error": null,
+    "message": ""
+}

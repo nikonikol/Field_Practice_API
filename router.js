@@ -433,5 +433,77 @@ router.post('/ClassAllTask', function (req, res){
 
 })
 
+//提交测试信息
+router.post('/SubmitExam', function (req, res){
+
+    var TestName=req.body.TestName
+    var TaskId=req.body.TaskId
+    var Content=req.body.Content
+    var TotalGrade=req.body.TotalGrade
+    var Deadtime=req.body.Deadtime  
+    
+    console.log(req.body)
+    try{
+
+        infoquery("INSERT INTO testtable (TestName,TaskId,Content,TotalGrade,Deadtime) VALUES('"+TestName+"',"+TaskId+",'"+Content+"','"+TotalGrade+"','"+Deadtime+"')" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                return res.status(200).json({
+                    code:0,
+                    error: err,
+                    message: ""
+                })
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+//学生提交测试结果
+router.post('/Studentsubmit', function (req, res){
+
+    var UserId=req.body.UserId
+    var TaskId=req.body.TaskId
+    var TestId=req.body.TestId
+    var SubmitTime=req.body.SubmitTime
+    var Answer=req.body.Answer
+    
+    console.log(req.body)
+    try{
+
+        infoquery("INSERT INTO testresult (UserId,TaskId,TestId,SubmitTime,Answer) VALUES('"+UserId+"',"+TaskId+","+TestId+",'"+SubmitTime+"','"+Answer+"')" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                return res.status(200).json({
+                    code:0,
+                    error: err,
+                    message: ""
+                })
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+
+
 //把router导出
 module.exports = router
