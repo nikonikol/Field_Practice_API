@@ -111,21 +111,48 @@
 
 
 ## ClassAllTask
-+ {
-    "Class":"地信1603"
++  {
+	"id":"5120160001",
+	"role":"0"
 }
 + {
-    "FromTime": "2019-05-02T15:34:10.000Z",
+    "code": 0,
+    "error": "",
+    "message": [
+        {
+            "FromTime": "2019-05-02T15:34:10.000Z",
             "EndTime": "2019-07-02T15:34:10.000Z",
             "TaskName": "sda",
-            "Class": "地信1601",
+            "Class": "地信1603",
             "Address": "绵阳",
             "TaskContent": "三调",
             "Sponsor": "5120160000",
             "TaskState": 0,
-            "TaskId": 9
+            "TaskId": 3,
+            "name": "李明崴"
+        }
+    ]
 }
-
++  {
+	"id":"5120160000",
+	"role":"1"
+}
++ {
+    "code": 0,
+    "error": "",
+    "message": [
+        {
+            "FromTime": "2019-05-02T15:34:10.000Z",
+            "EndTime": "2019-07-02T15:34:10.000Z",
+            "TaskName": "sda",
+            "Class": "地信1603",
+            "Address": "绵阳",
+            "TaskContent": "三调",
+            "Sponsor": "5120160000",
+            "TaskState": 0,
+            "TaskId": 3,
+            "name": "管理员"
+        },
 ##SubmitExam
 + {
     "TestName": "5120160100",

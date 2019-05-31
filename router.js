@@ -240,31 +240,6 @@ router.post('/SaveLocationInfom', function (req, res){
                 }
             }
         })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
     catch(err){
         console.log('err')
@@ -379,56 +354,115 @@ router.post('/SaveInfom', function (req, res){
 
 //发送班级信息返回班级里所有的实习任务
 router.post('/ClassAllTask', function (req, res){
-    //console.log()
-    var Class=req.body.Class
+    var id=req.body.id
+    var role=req.body.role
+
+    console.log(req.body.id)
     var sql=null
-    //console.log(Class)
-    try{
-        sql=`SELECT
-        tasktable.FromTime,
-        tasktable.EndTime,
-        tasktable.TaskName,
-        tasktable.Class,
-        tasktable.Address,
-        tasktable.TaskContent,
-        tasktable.Sponsor,
-        tasktable.TaskState,
-        tasktable.TaskId
-    FROM
-        tasktable
-    WHERE
-        tasktable.Class="`+Class+`"`      
-        infoquery( sql,function(err,data){
-            if(err){
-                //console.log(err)
-            }
-            else{
-                if(data[0]!=undefined){
-                    
-                    return res.status(200).json({
-                        code:0,
-                        error: '',
-                        message: data
-                    })
-                   
-                } 
-                else{
-                    return res.status(200).json({
-                        code:1,
-                        error: err,
-                        message: ""
-                    })
+    console.log()
+    if(role==="1"){
+        try{
+            sql=`SELECT
+            tasktable.FromTime,
+            tasktable.EndTime,
+            tasktable.TaskName,
+            tasktable.Class,
+            tasktable.Address,
+            tasktable.TaskContent,
+            tasktable.Sponsor,
+            tasktable.TaskState,
+            tasktable.TaskId,
+            studentinfo.name
+        FROM
+            tasktable,
+            studentinfo
+        WHERE
+            tasktable.Sponsor="`+id+`" OR
+            studentinfo.id="`+id+`"`      
+            infoquery( sql,function(err,data){
+                if(err){
+                    //console.log(err)
                 }
-            }
-        })
+                else{
+                    if(data[0]!=undefined){
+                        
+                        return res.status(200).json({
+                            code:0,
+                            error: '',
+                            message: data
+                        })
+                       
+                    } 
+                    else{
+                        return res.status(200).json({
+                            code:1,
+                            error: err,
+                            message: ""
+                        })
+                    }
+                }
+            })
+        }
+        catch(err){
+            //console.log('err')
+            res.status(500).json({
+                code:2,
+                err: err.message,
+                message: ''
+            })
+        }
     }
-    catch(err){
-        //console.log('err')
-        res.status(500).json({
-            code:2,
-            err: err.message,
-            message: ''
-        })
+    else if(role==="0"){
+        try{
+            sql=`SELECT
+            tasktable.FromTime,
+            tasktable.EndTime,
+            tasktable.TaskName,
+            tasktable.Class,
+            tasktable.Address,
+            tasktable.TaskContent,
+            tasktable.Sponsor,
+            tasktable.TaskState,
+            tasktable.TaskId,
+            studentinfo.name
+        FROM
+            tasktable,
+            studentinfo
+        WHERE
+            studentinfo.id="`+id+`"AND
+            tasktable.Class = studentinfo.class`      
+            infoquery( sql,function(err,data){
+                if(err){
+                    //console.log(err)
+                }
+                else{
+                    if(data[0]!=undefined){
+                        
+                        return res.status(200).json({
+                            code:0,
+                            error: '',
+                            message: data
+                        })
+                       
+                    } 
+                    else{
+                        return res.status(200).json({
+                            code:1,
+                            error: err,
+                            message: ""
+                        })
+                    }
+                }
+            })
+        }
+        catch(err){
+            //console.log('err')
+            res.status(500).json({
+                code:2,
+                err: err.message,
+                message: ''
+            })
+        }
     }
 
 })
