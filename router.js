@@ -46,7 +46,7 @@ router.post('/IscheckLogin', function (req, res) {
     var username=req.body.username
     var userpsd=req.body.password
     try {
-        infoquery("SELECT * FROM studentinfo WHERE Id='"+username+"'AND Password='"+userpsd+"'" ,function(err,data){
+        infoquery("SELECT * FROM studentinfo WHERE UserId='"+username+"'AND Password='"+userpsd+"'" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -86,7 +86,7 @@ router.post('/StudentInfom', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("SELECT * FROM studentinfo WHERE Id='"+username+"'" ,function(err,data){
+        infoquery("SELECT * FROM studentinfo WHERE UserId='"+username+"'" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -277,7 +277,7 @@ router.post('/SearchLocation', function (req, res){
         location
         WHERE
         location.TaskId = "`+TaskId+`" AND
-        location.UserId = studentinfo.Id`
+        location.UserId = studentinfo.UserId`
         
         infoquery(sql ,function(err,data){
             if(err){
@@ -376,7 +376,7 @@ router.post('/ClassAllTask', function (req, res){
             studentinfo
         WHERE
             tasktable.Sponsor="`+id+`" OR
-            studentinfo.Id="`+id+`"`      
+            studentinfo.UserId="`+id+`"`      
             infoquery( sql,function(err,data){
                 if(err){
                     //console.log(err)
