@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost_3306
+ Source Server         : fieldpractice
  Source Server Type    : MySQL
  Source Server Version : 80015
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 30/05/2019 13:26:00
+ Date: 01/06/2019 12:51:00
 */
 
 SET NAMES utf8mb4;
@@ -64,14 +64,14 @@ INSERT INTO `location` VALUES (18, '5120163333', '2019-07-02 23:34:10.000000', '
 -- ----------------------------
 DROP TABLE IF EXISTS `studentinfo`;
 CREATE TABLE `studentinfo`  (
-  `id` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '学生学号',
-  `name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '真实姓名',
-  `password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `nickname` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `role` int(5) NOT NULL,
-  PRIMARY KEY (`id`) USING BTREE
+  `UserId` varchar(12) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '学生学号',
+  `Name` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '真实姓名',
+  `Password` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `NickName` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `Icon` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `Class` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `Role` int(5) NOT NULL,
+  PRIMARY KEY (`UserId`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
@@ -129,7 +129,7 @@ CREATE TABLE `testresult`  (
   `SubmitTime` datetime(6) NOT NULL,
   `Answer` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`Id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of testresult
@@ -148,7 +148,7 @@ CREATE TABLE `testtable`  (
   `TotalGrade` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `Deadtime` datetime(6) NOT NULL,
   PRIMARY KEY (`Testid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of testtable
