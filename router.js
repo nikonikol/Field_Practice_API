@@ -427,7 +427,7 @@ router.post('/ClassAllTask', function (req, res){
             tasktable,
             studentinfo
         WHERE
-            studentinfo.Id="`+id+`"AND
+            studentinfo.UserId="`+id+`"AND
             tasktable.Class = studentinfo.Class`      
             infoquery( sql,function(err,data){
                 if(err){
