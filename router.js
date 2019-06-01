@@ -372,7 +372,8 @@ router.post('/ClassAllTask', function (req, res){
             tasktable.Sponsor,
             tasktable.TaskState,
             tasktable.TaskId,
-            studentinfo.name
+            studentinfo.name,
+            studentinfo.icon
         FROM
             tasktable,
             studentinfo
@@ -424,7 +425,8 @@ router.post('/ClassAllTask', function (req, res){
             tasktable.Sponsor,
             tasktable.TaskState,
             tasktable.TaskId,
-            studentinfo.name
+            studentinfo.name,
+            studentinfo.icon
         FROM
             tasktable,
             studentinfo

@@ -129,7 +129,8 @@
             "Sponsor": "5120160000",
             "TaskState": 0,
             "TaskId": 3,
-            "name": "李明崴"
+            "name": "李明崴",
+            "icon":""
         }
     ]
 }
@@ -152,6 +153,7 @@
             "TaskState": 0,
             "TaskId": 3,
             "name": "管理员"
+            "icon":""
         },
 ##SubmitExam
 + {
