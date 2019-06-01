@@ -356,6 +356,7 @@ router.post('/SaveInfom', function (req, res){
 router.post('/ClassAllTask', function (req, res){
     var id=req.body.UserId
     var role=req.body.Role
+    var stuclass=req.body.Class
     console.log(req.body.UserId)
     var sql=null
     if(role==="1"){
@@ -376,7 +377,7 @@ router.post('/ClassAllTask', function (req, res){
             tasktable,
             studentinfo
         WHERE
-            tasktable.Sponsor="`+id+`" OR
+            tasktable.Sponsor="`+id+`" AND
             studentinfo.UserId="`+id+`"`      
             infoquery( sql,function(err,data){
                 if(err){
@@ -429,8 +430,9 @@ router.post('/ClassAllTask', function (req, res){
             tasktable,
             studentinfo
         WHERE
-            studentinfo.UserId="`+id+`"AND
-            tasktable.Class = studentinfo.Class`      
+            tasktable.Class="`+stuclass+`"AND
+            tasktable.Sponsor = studentinfo.UserId 
+            `      
             infoquery( sql,function(err,data){
                 if(err){
                     //console.log(err)

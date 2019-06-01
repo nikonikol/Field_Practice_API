@@ -112,8 +112,11 @@
 
 ## ClassAllTask
 +  {
-	"UserId":"5120160001",
-	"Role":"0"
+	{
+	"UserId":"5120160000",
+	"Role":"0",
+	"Class":"地信1603"
+}
 }
 + {
     "code": 0,
