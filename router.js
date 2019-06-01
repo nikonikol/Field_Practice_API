@@ -354,12 +354,10 @@ router.post('/SaveInfom', function (req, res){
 
 //发送班级信息返回班级里所有的实习任务
 router.post('/ClassAllTask', function (req, res){
-    var id=req.body.id
-    var role=req.body.role
-
-    console.log(req.body.id)
+    var id=req.body.UserId
+    var role=req.body.Role
+    console.log(req.body.UserId)
     var sql=null
-    console.log()
     if(role==="1"){
         try{
             sql=`SELECT
