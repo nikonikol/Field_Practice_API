@@ -168,6 +168,7 @@
     "error": null,
     "message": ""
 }
+
 ##Studentsubmit
 + {
     "UserId": "5120160100",
@@ -175,6 +176,38 @@
     "TestId": 5,
     "SubmitTime": "2019-07-02 23:34:10.000000",
     "Answer": "歪歪真是个小可爱"
+}
++ {
+    "code": 0,
+    "error": null,
+    "message": ""
+}
+##ExamCorrection
++ 8接口8：老师批改试题
+接口说明：老师批改试题
+发送数据：TaskId，TestId，UserId，Grade（学生得分数）
+返回数据：code、error（批改不成功error显示不成功原因）
+
++ {
+    "UserId": "5120160100",
+    "TaskId": 5,
+    "TestId": 5,
+    "SubmitTime": "2019-07-05 23:34:10.000000",
+    "Grade": 100
+}
++ {
+    "code": 0,
+    "error": null,
+    "message": ""
+}
+##SearchTaskinform
++ 9接口9：搜索任务名
+接口说明：搜索任务名
+发送数据：SearchTaskName（要搜索的任务名称，可以进行模糊查询，所以这个名称可能不全）
+返回数据：将匹配的任务信息返回，其具体返回信数据和接口1一样
+
++ {
+    "TaskName": "sda"
 }
 + {
     "code": 0,

@@ -46,7 +46,7 @@ router.post('/IscheckLogin', function (req, res) {
     var username=req.body.username
     var userpsd=req.body.password
     try {
-        infoquery("SELECT * FROM studentinfo WHERE id='"+username+"'AND password='"+userpsd+"'" ,function(err,data){
+        infoquery("SELECT * FROM studentinfo WHERE UserId='"+username+"'AND Password='"+userpsd+"'" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -86,7 +86,7 @@ router.post('/StudentInfom', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("SELECT * FROM studentinfo WHERE id='"+username+"'" ,function(err,data){
+        infoquery("SELECT * FROM studentinfo WHERE UserId='"+username+"'" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -263,11 +263,11 @@ router.post('/SearchLocation', function (req, res){
     try{
 
         sql =`SELECT
-        studentinfo.name,
-        studentinfo.nickname,
-        studentinfo.icon,
-        studentinfo.class,
-        studentinfo.role,
+        studentinfo.Name,
+        studentinfo.Nickname,
+        studentinfo.Icon,
+        studentinfo.Class,
+        studentinfo.Role,
         location.UserId,
         location.LastTime,
         location.Location,
@@ -277,7 +277,7 @@ router.post('/SearchLocation', function (req, res){
         location
         WHERE
         location.TaskId = "`+TaskId+`" AND
-        location.UserId = studentinfo.id`
+        location.UserId = studentinfo.UserId`
         
         infoquery(sql ,function(err,data){
             if(err){
@@ -328,7 +328,7 @@ router.post('/SaveInfom', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("INSERT INTO studentinfo (id,name,password,nickname,icon,class,role) VALUES('"+id+"','"+name+"','"+pasword+"','"+nickname+"','"+icon+"','"+classs+"',"+role+")" ,function(err,data){
+        infoquery("INSERT INTO studentinfo (UserId,Name,Password,Nickname,Icon,Class,Role) VALUES('"+id+"','"+name+"','"+pasword+"','"+nickname+"','"+icon+"','"+classs+"',"+role+")" ,function(err,data){
             if(err){
                 console.log(err)
             }
@@ -370,8 +370,7 @@ router.post('/ClassAllTask', function (req, res){
             tasktable.Sponsor,
             tasktable.TaskState,
             tasktable.TaskId,
-            studentinfo.Name,
-            studentinfo.Icon
+            studentinfo.Name
         FROM
             tasktable,
             studentinfo
@@ -423,13 +422,12 @@ router.post('/ClassAllTask', function (req, res){
             tasktable.Sponsor,
             tasktable.TaskState,
             tasktable.TaskId,
-            studentinfo.Name,
-            studentinfo.Icon
+            studentinfo.Name
         FROM
             tasktable,
             studentinfo
         WHERE
-            studentinfo.UserId="`+id+`"AND
+            studentinfo.Id="`+id+`"AND
             tasktable.Class = studentinfo.Class`      
             infoquery( sql,function(err,data){
                 if(err){
@@ -537,7 +535,82 @@ router.post('/Studentsubmit', function (req, res){
     }
 
 })
+//老师批改测试结果
+router.post('/ExamCorrection', function (req, res){
 
+    var UserId=req.body.UserId
+    var TaskId=req.body.TaskId
+    var TestId=req.body.TestId
+    var SubmitTime=req.body.SubmitTime
+    var Grade=req.body.Grade
+    
+    console.log(req.body)
+    try{
+        sql ="UPDATE testresult SET Grade="+Grade+",SubmitTime='"+SubmitTime+"' WHERE UserId='"+UserId+"' AND TaskId="+TaskId+" AND TestId="+TestId
+        infoquery(sql ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                return res.status(200).json({
+                    code:0,
+                    error: err,
+                    message: ""
+                })
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+
+//由学生学号，查询学生全部信息，并返回。
+router.post('/SearchTaskinform', function (req, res){
+    var TaskName=req.body.TaskName
+    console.log(req.body)
+    try{
+
+        infoquery("SELECT * FROM tasktable WHERE TaskName LIKE '%"+TaskName+"%'" ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(data[0]!=undefined){
+
+                    return res.status(200).json({
+                        code:0,
+                        error: '',
+                        message: data
+                    })
+                   
+                } 
+                else{
+                    return res.status(200).json({
+                        code:1,
+                        error: err,
+                        message: ""
+                    })
+                }
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
 
 //把router导出
 module.exports = router
