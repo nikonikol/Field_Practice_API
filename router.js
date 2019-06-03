@@ -373,12 +373,15 @@ router.post('/ClassAllTask', function (req, res){
             tasktable.TaskId,
             studentinfo.Name,
             studentinfo.Icon
-        FROM
+            FROM
             tasktable,
             studentinfo
-        WHERE
+            WHERE
             tasktable.Sponsor="`+id+`" AND
-            studentinfo.UserId="`+id+`"`      
+            studentinfo.UserId="`+id+`"
+            ORDER BY
+            tasktable.FromTime DESC
+            `      
             infoquery( sql,function(err,data){
                 if(err){
                     //console.log(err)
@@ -432,6 +435,8 @@ router.post('/ClassAllTask', function (req, res){
         WHERE
             tasktable.Class="`+stuclass+`"AND
             tasktable.Sponsor = studentinfo.UserId 
+            ORDER BY
+            tasktable.FromTime DESC
             `      
             infoquery( sql,function(err,data){
                 if(err){
