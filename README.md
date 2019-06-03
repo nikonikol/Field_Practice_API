@@ -217,3 +217,29 @@
     "error": null,
     "message": ""
 }
+##GetTestByTaskId
++ 10接口10：根据TaskId获取该task包含的Test信息
+接口名定义为GetTestByTaskId
+接口说明：根据TaskId获取该task包含的Test信息
+发送数据：TaskId
+返回数据：将TestTable中所有taskid与发送taskid相等的记录返回给客户端
+
+
++ {
+    "TaskId": 5
+}
++ {
+    "code": 0,
+    "error": "",
+    "message": [
+        {
+            "Testid": 1,
+            "TestName": "5120160100",
+            "TaskId": 5,
+            "Content": "waiwai is shabi",
+            "TotalGrade": "5.68",
+            "Deadtime": "2019-07-02T15:34:10.000Z"
+        }
+    ]
+}
+

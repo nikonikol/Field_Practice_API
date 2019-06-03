@@ -616,5 +616,53 @@ router.post('/SearchTaskinform', function (req, res){
 
 })
 
+//根据TaskId获取该task包含的Test信息
+router.post('/GetTestByTaskId', function (req, res){
+    var TaskId=req.body.TaskId
+    console.log(req.body)
+    try{
+        sql=`
+        SELECT
+        *
+        FROM
+        testtable
+        WHERE
+        testtable.TaskId = `+TaskId+`
+        `
+        infoquery(sql ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(data[0]!=undefined){
+
+                    return res.status(200).json({
+                        code:0,
+                        error: '',
+                        message: data
+                    })
+                   
+                } 
+                else{
+                    return res.status(200).json({
+                        code:1,
+                        error: err,
+                        message: ""
+                    })
+                }
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+
 //把router导出
 module.exports = router
