@@ -486,7 +486,7 @@ router.post('/SubmitExam', function (req, res){
     console.log(req.body)
     try{
 
-        infoquery("INSERT INTO testtable (TestName,TaskId,Content,TotalGrade,Deadtime) VALUES('"+TestName+"',"+TaskId+",'"+Content+"','"+TotalGrade+"','"+Deadtime+"')" ,function(err,data){
+        infoquery("INSERT INTO testtable (TestName,TaskId,Content,TotalGrade,Deadtime) VALUES('"+TestName+"',"+TaskId+",'"+Content+"',"+TotalGrade+",'"+Deadtime+"')" ,function(err,data){
             if(err){
                 console.log(err)
             }

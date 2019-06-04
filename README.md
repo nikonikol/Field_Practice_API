@@ -163,7 +163,7 @@
     "TestName": "5120160100",
     "TaskId": 5,
     "Content": "waiwai is shabi",
-    "TotalGrade": "5120160100",
+    "TotalGrade": 100,
     "Deadtime":"2019-07-02 23:34:10.000000"
 }
 + {
