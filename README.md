@@ -243,3 +243,26 @@
     ]
 }
 
+##GetTestResultByTestId
+11接口11：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
+接口说明：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
+接口名字：GetTestResultByTestId
+发送数据TestId
+返回数据：返回数据分为2类：已经批改过的和未批改过的，未批改过的返回用户头像、用户id、用户姓名、用户答案，已经批改过的还要返回批改分数和老师评价以及SubmitNumber（该test用户学生所有已提交数）、TotalNumber（该test所有应提交数）
++ {
+    "TestId": 5
+}
++ {
+    "code": 0,
+    "error": "",
+    "message": [
+        {
+            "Testid": 1,
+            "TestName": "5120160100",
+            "TaskId": 5,
+            "Content": "waiwai is shabi",
+            "TotalGrade": "5.68",
+            "Deadtime": "2019-07-02T15:34:10.000Z"
+        }
+    ]
+}

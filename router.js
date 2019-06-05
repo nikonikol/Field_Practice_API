@@ -61,7 +61,7 @@ router.post('/IscheckLogin', function (req, res) {
                 } 
                 else{
                     return res.status(200).json({
-                        code:1,
+                        code:0,
                         error:err,
                         message: ''
                     })
@@ -102,7 +102,7 @@ router.post('/StudentInfom', function (req, res){
                 } 
                 else{
                     return res.status(200).json({
-                        code:1,
+                        code:0,
                         error: err,
                         message: ""
                     })
@@ -295,7 +295,7 @@ router.post('/SearchLocation', function (req, res){
                 } 
                 else{
                     return res.status(200).json({
-                        code:1,
+                        code:0,
                         error: err,
                         message: ""
                     })
@@ -398,7 +398,7 @@ router.post('/ClassAllTask', function (req, res){
                     } 
                     else{
                         return res.status(200).json({
-                            code:1,
+                            code:0,
                             error: err,
                             message: ""
                         })
@@ -454,7 +454,7 @@ router.post('/ClassAllTask', function (req, res){
                     } 
                     else{
                         return res.status(200).json({
-                            code:1,
+                            code:0,
                             error: err,
                             message: ""
                         })
@@ -602,7 +602,7 @@ router.post('/SearchTaskinform', function (req, res){
                 } 
                 else{
                     return res.status(200).json({
-                        code:1,
+                        code:0,
                         error: err,
                         message: ""
                     })
@@ -650,7 +650,64 @@ router.post('/GetTestByTaskId', function (req, res){
                 } 
                 else{
                     return res.status(200).json({
-                        code:1,
+                        code:0,
+                        error: err,
+                        message: ""
+                    })
+                }
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+//根据TestId返回TestTb里面TestId与发送的TestId相等的记录
+router.post('/GetTestResultByTestId', function (req, res){
+    var TestId=req.body.TestId
+    console.log(req.body)
+    try{
+        sql=`SELECT
+        studentinfo.Icon,
+        studentinfo.UserId,
+        studentinfo.Name,
+        testresult.Answer,
+        testresult.Grade,
+        testresult.Evaluate
+        FROM
+        testtable ,
+        studentinfo ,
+        testresult
+        WHERE
+        testtable.Testid = `+TestId+` AND
+        testtable.Testid = testresult.TestId AND
+        testtable.TaskId = testresult.TaskId AND
+        testresult.UserId = studentinfo.UserId
+        
+        `
+        infoquery(sql ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(data[0]!=undefined){
+
+                    return res.status(200).json({
+                        code:0,
+                        error: '',
+                        message: data
+                    })
+                   
+                } 
+                else{
+                    return res.status(200).json({
+                        code:0,
                         error: err,
                         message: ""
                     })
