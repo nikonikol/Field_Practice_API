@@ -552,10 +552,12 @@ router.post('/ExamCorrection', function (req, res){
     var TestId=req.body.TestId
     var SubmitTime=req.body.SubmitTime
     var Grade=req.body.Grade
+    var Evaluate=req.body.Evaluate
     
     console.log(req.body)
     try{
-        sql ="UPDATE testresult SET Grade="+Grade+",SubmitTime='"+SubmitTime+"' WHERE UserId='"+UserId+"' AND TaskId="+TaskId+" AND TestId="+TestId
+        sql ="UPDATE testresult SET Grade="+Grade+",SubmitTime='"+SubmitTime+"',State=1,Evaluate='"+Evaluate+"'  WHERE UserId='"+UserId+"' AND TaskId="+TaskId+" AND TestId="+TestId
+
         infoquery(sql ,function(err,data){
             if(err){
                 console.log(err)
@@ -668,11 +670,71 @@ router.post('/GetTestByTaskId', function (req, res){
     }
 
 })
-//根据TestId返回TestTb里面TestId与发送的TestId相等的记录
-router.post('/GetTestResultByTestId', function (req, res){
+//根据TestId返回TestTb里面TestId与发送的TestId相等的记录 已经批改
+router.post('/GetUnCheckedTestResultByTestId', function (req, res){
     var TestId=req.body.TestId
     console.log(req.body)
     try{
+        //未批改
+        sql=`SELECT
+        studentinfo.Icon,
+        studentinfo.UserId,
+        studentinfo.Name,
+        testresult.Answer
+        FROM
+        testtable ,
+        studentinfo ,
+        testresult
+        WHERE
+        testtable.Testid = `+TestId+` AND
+        testtable.Testid = testresult.TestId AND
+        testtable.TaskId = testresult.TaskId AND
+        testresult.State = 0 AND
+        testresult.UserId = studentinfo.UserId
+        
+        `
+        infoquery(sql ,function(err,data){
+            if(err){
+                console.log(err)
+            }
+            else{
+                if(data[0]!=undefined){
+
+                    return res.status(200).json({
+                        code:0,
+                        error: '',
+                        message: data
+                    })
+                   
+                } 
+                else{
+                    return res.status(200).json({
+                        code:0,
+                        error: err,
+                        message: ""
+                    })
+                }
+            }
+        })
+    }
+    catch(err){
+        console.log('err')
+        res.status(500).json({
+            code:2,
+            err: err.message,
+            message: ''
+        })
+    }
+
+})
+//根据TestId返回TestTb里面TestId与发送的TestId相等的记录 未批改
+router.post('/GetCheckedTestResultByTestId', function (req, res){
+    var TestId=req.body.TestId
+    var arr =new Array
+    console.log(req.body)
+    try{
+
+        //已经批改
         sql=`SELECT
         studentinfo.Icon,
         studentinfo.UserId,
@@ -688,6 +750,7 @@ router.post('/GetTestResultByTestId', function (req, res){
         testtable.Testid = `+TestId+` AND
         testtable.Testid = testresult.TestId AND
         testtable.TaskId = testresult.TaskId AND
+        testresult.State = 1 AND
         testresult.UserId = studentinfo.UserId
         
         `

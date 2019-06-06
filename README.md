@@ -196,7 +196,8 @@
     "TaskId": 5,
     "TestId": 5,
     "SubmitTime": "2019-07-05 23:34:10.000000",
-    "Grade": 100
+    "Grade": 100,
+    "Evaluate": "歪歪你这小子天天不学好"
 }
 + {
     "code": 0,
@@ -243,7 +244,7 @@
     ]
 }
 
-##GetTestResultByTestId
+##GetUnCheckedTestResultByTestId
 11接口11：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
 接口说明：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
 接口名字：GetTestResultByTestId
@@ -257,12 +258,46 @@
     "error": "",
     "message": [
         {
-            "Testid": 1,
-            "TestName": "5120160100",
-            "TaskId": 5,
-            "Content": "waiwai is shabi",
-            "TotalGrade": "5.68",
-            "Deadtime": "2019-07-02T15:34:10.000Z"
+            "Icon": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559384196495&di=3c72b90315c4a07e7bd024ee6e2233c0&imgtype=0&src=http%3A%2F%2Fi9.hexunimg.cn%2F2013-07-05%2F155842064.jpg",
+            "UserId": "5120160000",
+            "Name": "user000",
+            "Answer": "歪歪真是个小可爱"
         }
     ]
+}
+#GetUnCheckedTestResultByTestId
+SubmitNumber（该test用户学生所有已提交数）、TotalNumber（该test所有应提交数）
+已经批改过的还要返回批改分数和老师评价以及
+
+##GetCheckedTestResultByTestId
+12接口12：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
+接口说明：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
+接口名字：GetTestResultByTestId
+发送数据TestId
+返回数据：已经批改过的用户头像、用户id、用户姓名、用户答案
++ {
+    "TestId": 5
+}
++ {
+    "code": 0,
+    "error": "",
+    "message": [
+        {
+            "Icon": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559384196495&di=3c72b90315c4a07e7bd024ee6e2233c0&imgtype=0&src=http%3A%2F%2Fi9.hexunimg.cn%2F2013-07-05%2F155842064.jpg",
+            "UserId": "5120160000",
+            "Name": "user000",
+            "Answer": "歪歪真是个小可爱",
+            "Grade": 100,
+            "Evaluate": "歪歪你这小子天天不学好"
+        },
+        {
+            "Icon": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559384196489&di=89acc57bb6c577d13c3270718d888e79&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F16880e1f05dc8807c3e5336d1d8eb4eeeb6130ac3423e-xa0xnN_fw658",
+            "UserId": "5120160001",
+            "Name": "user001",
+            "Answer": "佳哥大帅逼",
+            "Grade": 99,
+            "Evaluate": "佳哥你个变态"
+        }
+    ],
+    "count": 2
 }
