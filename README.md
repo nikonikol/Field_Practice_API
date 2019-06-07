@@ -191,14 +191,22 @@
 发送数据：TaskId，TestId，UserId，Grade（学生得分数）
 返回数据：code、error（批改不成功error显示不成功原因）
 
-+ {
-    "UserId": "5120160100",
++ [{
+    "UserId": "5120160000",
     "TaskId": 5,
     "TestId": 5,
     "SubmitTime": "2019-07-05 23:34:10.000000",
-    "Grade": 100,
+    "Grade": 95,
     "Evaluate": "歪歪你这小子天天不学好"
-}
+},
+{
+    "UserId": "5120160002",
+    "TaskId": 5,
+    "TestId": 5,
+    "SubmitTime": "2019-07-05 23:34:10.000000",
+    "Grade": 12,
+    "Evaluate": "歪歪你这小子天天不学好"
+}]
 + {
     "code": 0,
     "error": null,
