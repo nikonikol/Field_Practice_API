@@ -655,9 +655,7 @@ router.post('/GetUnCheckedTestResultByTestId', function (req, res) {
         studentinfo.Name,
         studentinfo.Class,
         testresult.SubmitTime,
-        testresult.Answer,
-        testtable.Content,
-        testtable.TotalGrade
+        testresult.Answer
         FROM
         testtable ,
         studentinfo ,
@@ -716,9 +714,7 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
         testresult.Answer,
         testresult.Grade,
         testresult.SubmitTime,
-        testresult.Evaluate,
-        testtable.Content,
-        testtable.TotalGrade
+        testresult.Evaluate
 
         FROM
         testtable ,
