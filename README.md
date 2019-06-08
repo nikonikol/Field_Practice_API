@@ -279,7 +279,7 @@ SubmitNumber（该test用户学生所有已提交数）、TotalNumber（该test�
 
 ##GetCheckedTestResultByTestId
 12接口12：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
-接口说明：根据TestId返回TestTb里面TestId与发送的TestId相等的记录
+接口说明：根据TestId返回TestTb里面TestId与发送的TestId相等的记录+多添加两个字段Content（testtable里面的字段）和TotalGrade（testtable里面的字段）
 接口名字：GetTestResultByTestId
 发送数据TestId
 返回数据：已经批改过的用户头像、用户id、用户姓名、用户答案
