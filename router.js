@@ -629,7 +629,7 @@ router.post('/GetTestByTaskId', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ""
+                        message: "{}"
                     })
                 }
             }
