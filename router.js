@@ -61,7 +61,7 @@ router.post('/IscheckLogin', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ''
+                        message: []
                     })
                 }
             }
@@ -72,7 +72,7 @@ router.post('/IscheckLogin', function (req, res) {
         res.status(500).json({
             code: 2,
             error: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -100,7 +100,7 @@ router.post('/StudentInfom', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ""
+                        message: []
                     })
                 }
             }
@@ -110,7 +110,7 @@ router.post('/StudentInfom', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -139,7 +139,7 @@ router.post('/SaveTaskInfom', function (req, res) {
                 return res.status(200).json({
                     code: 0,
                     error: err,
-                    message: ""
+                    message: []
                 })
             }
         })
@@ -148,7 +148,7 @@ router.post('/SaveTaskInfom', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -200,7 +200,7 @@ router.post('/SaveLocationInfom', function (req, res) {
                             return res.status(200).json({
                                 code: 0,
                                 error: err,
-                                message: ""
+                                message: []
                             })
                         }
                     })
@@ -220,7 +220,7 @@ router.post('/SaveLocationInfom', function (req, res) {
                             return res.status(200).json({
                                 code: 0,
                                 error: err,
-                                message: ""
+                                message: []
                             })
                         }
                     })
@@ -234,7 +234,7 @@ router.post('/SaveLocationInfom', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -283,7 +283,7 @@ router.post('/SearchLocation', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ""
+                        message: []
                     })
                 }
             }
@@ -293,7 +293,7 @@ router.post('/SearchLocation', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -320,7 +320,7 @@ router.post('/SaveInfom', function (req, res) {
                 return res.status(200).json({
                     code: 0,
                     error: err,
-                    message: ""
+                    message: []
                 })
             }
         })
@@ -329,7 +329,7 @@ router.post('/SaveInfom', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -381,7 +381,7 @@ router.post('/ClassAllTask', function (req, res) {
                         return res.status(200).json({
                             code: 0,
                             error: err,
-                            message: ""
+                            message: []
                         })
                     }
                 }
@@ -391,7 +391,7 @@ router.post('/ClassAllTask', function (req, res) {
             res.status(500).json({
                 code: 2,
                 err: err.message,
-                message: ''
+                message: []
             })
         }
     } else if (role === "0") {
@@ -433,7 +433,7 @@ router.post('/ClassAllTask', function (req, res) {
                         return res.status(200).json({
                             code: 0,
                             error: err,
-                            message: ""
+                            message: []
                         })
                     }
                 }
@@ -443,7 +443,7 @@ router.post('/ClassAllTask', function (req, res) {
             res.status(500).json({
                 code: 2,
                 err: err.message,
-                message: ''
+                message: []
             })
         }
     }
@@ -469,7 +469,7 @@ router.post('/SubmitExam', function (req, res) {
                 return res.status(200).json({
                     code: 0,
                     error: err,
-                    message: ""
+                    message: []
                 })
             }
         })
@@ -478,7 +478,7 @@ router.post('/SubmitExam', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -502,7 +502,7 @@ router.post('/Studentsubmit', function (req, res) {
                 return res.status(200).json({
                     code: 0,
                     error: err,
-                    message: ""
+                    message: []
                 })
             }
         })
@@ -511,7 +511,7 @@ router.post('/Studentsubmit', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -546,7 +546,7 @@ router.post('/ExamCorrection', function (req, res) {
             res.status(500).json({
                 code: 2,
                 err: err.message,
-                message: ''
+                message: []
             })
         }
     }
@@ -554,7 +554,7 @@ router.post('/ExamCorrection', function (req, res) {
     return res.status(200).json({
         code: 0,
         error: null,
-        message: ""
+        message: []
     })
 
 
@@ -584,7 +584,7 @@ router.post('/SearchTaskinform', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ""
+                        message: []
                     })
                 }
             }
@@ -594,7 +594,7 @@ router.post('/SearchTaskinform', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -639,7 +639,7 @@ router.post('/GetTestByTaskId', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -685,7 +685,7 @@ router.post('/GetUnCheckedTestResultByTestId', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ""
+                        message: []
                     })
                 }
             }
@@ -695,7 +695,7 @@ router.post('/GetUnCheckedTestResultByTestId', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
@@ -746,7 +746,7 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message: ""
+                        message: []
                     })
                 }
             }
@@ -756,7 +756,7 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
         res.status(500).json({
             code: 2,
             err: err.message,
-            message: ''
+            message: []
         })
     }
 
