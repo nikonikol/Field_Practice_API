@@ -629,12 +629,7 @@ router.post('/GetTestByTaskId', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: err,
-                        message:`{"Testid": 1,
-                        "TestName": "5120160100",
-                        "TaskId": 5,
-                        "Content": "waiwai is shabi",
-                        "TotalGrade": "5.68",
-                        "Deadtime": "2019-07-02T15:34:10.000Z"}`
+                        message: "[]"
                     })
                 }
             }
