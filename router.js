@@ -518,20 +518,21 @@ router.post('/Studentsubmit', function (req, res) {
 })
 //老师批改测试结果
 router.post('/ExamCorrection', function (req, res) {
-    var examarry = req.body
+    var examarry =eval(req.body.StudentGrade)
+    console.log(examarry)
     var UserId
     var TaskId
     var TestId
     var Grade
     var Evaluate
     for (i = 0; i < examarry.length; i++) {
-        exam = examarry[i]
+        exam = examarry[i] 
         UserId = exam.UserId
         TaskId = exam.TaskId
         TestId = exam.TestId
         Grade = exam.Grade
         Evaluate = exam.Evaluate
-
+        console.log(exam)
         try {
             sql = "UPDATE testresult SET Grade=" + Grade + ",State=1,Evaluate='" + Evaluate + "'  WHERE UserId='" + UserId + "' AND TaskId=" + TaskId + " AND TestId=" + TestId
             infoquery(sql, function (err, data) {
@@ -668,6 +669,7 @@ router.post('/GetUnCheckedTestResultByTestId', function (req, res) {
         testresult.UserId = studentinfo.UserId        
         `
         infoquery(sql, function (err, data) {
+          
             if (err) {
                 console.log(err)
             } else {
