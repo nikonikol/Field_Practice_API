@@ -11,7 +11,7 @@
  Target Server Version : 80015
  File Encoding         : 65001
 
- Date: 09/06/2019 09:31:44
+ Date: 09/06/2019 15:16:08
 */
 
 SET NAMES utf8mb4;
@@ -138,14 +138,14 @@ CREATE TABLE `testresult`  (
 -- ----------------------------
 -- Records of testresult
 -- ----------------------------
-INSERT INTO `testresult` VALUES (2, '5120160001', 3, 1, 95, '2019-06-06 17:49:21.000000', '答案：11111111111111111111111111111', 'fdhgdfgfdg', 1);
-INSERT INTO `testresult` VALUES (3, '5120160002', 3, 1, 12, '2019-06-06 17:50:39.000000', '答案：22222222222222222', 'dfgff', 1);
-INSERT INTO `testresult` VALUES (4, '5120160003', 3, 1, NULL, NULL, '答案：333333333333333', NULL, 0);
-INSERT INTO `testresult` VALUES (5, '5120160004', 3, 1, NULL, NULL, '答案：44444444444444', NULL, 0);
-INSERT INTO `testresult` VALUES (6, '5120160005', 3, 1, NULL, NULL, '答案：555555555555555', NULL, 0);
-INSERT INTO `testresult` VALUES (7, '5120160006', 3, 1, NULL, NULL, '答案：66666666666666666666', NULL, 0);
-INSERT INTO `testresult` VALUES (8, '5120160007', 3, 1, NULL, NULL, '答案：777777777777777', NULL, 0);
-INSERT INTO `testresult` VALUES (9, '5120160008', 3, 1, NULL, NULL, '答案：8888888888', NULL, 0);
+INSERT INTO `testresult` VALUES (2, '5120160001', 3, 1, 6, '2019-06-06 17:49:21.000000', '答案：11111111111111111111111111111', 'fdhgdfgfdg', 1);
+INSERT INTO `testresult` VALUES (3, '5120160002', 3, 1, 4, '2019-06-06 17:50:39.000000', '答案：22222222222222222', 'dfgff', 1);
+INSERT INTO `testresult` VALUES (4, '5120160003', 3, 1, 2, NULL, '答案：333333333333333', '苹果笔记本', 1);
+INSERT INTO `testresult` VALUES (5, '5120160004', 3, 1, 2, NULL, '答案：44444444444444', '空间看看', 1);
+INSERT INTO `testresult` VALUES (6, '5120160005', 3, 1, 2, NULL, '答案：555555555555555', '空间看看mm', 1);
+INSERT INTO `testresult` VALUES (7, '5120160006', 3, 1, 2, NULL, '答案：66666666666666666666', '空间看看mm', 1);
+INSERT INTO `testresult` VALUES (8, '5120160007', 3, 1, 4, NULL, '答案：777777777777777', '觉得可可小姐才能', 1);
+INSERT INTO `testresult` VALUES (9, '5120160008', 3, 1, 6, NULL, '答案：8888888888', 'undefined', 1);
 INSERT INTO `testresult` VALUES (10, '5120160009', 3, 1, NULL, NULL, '答案：99999999', NULL, 0);
 INSERT INTO `testresult` VALUES (11, '5120160010', 3, 1, NULL, NULL, '答案：111111111', NULL, 0);
 INSERT INTO `testresult` VALUES (12, '5120160011', 3, 1, 1, '2019-06-06 23:55:54.000000', '答案：111', '偏题了', 1);
@@ -168,7 +168,7 @@ CREATE TABLE `testtable`  (
   `TotalGrade` int(255) NOT NULL,
   `Deadtime` datetime(6) NULL,
   PRIMARY KEY (`Testid`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of testtable
@@ -207,5 +207,6 @@ INSERT INTO `testtable` VALUES (31, 'testName', 3, 'testcontent', 10, '2019-06-0
 INSERT INTO `testtable` VALUES (32, 'testName', 3, 'testcontent', 10, '2019-06-04 14:12:20.000000');
 INSERT INTO `testtable` VALUES (33, '你的名字', 3, '年休假小姐姐', 5, '2019-06-04 15:15:33.000000');
 INSERT INTO `testtable` VALUES (34, '哈哈', 3, '表白墙', 6464, '2019-06-12 14:52:51.000000');
+INSERT INTO `testtable` VALUES (35, '收集熊猫便便', 9, '在熊猫繁殖基地收集熊猫便便', 8, '2019-06-09 14:28:49.000000');
 
 SET FOREIGN_KEY_CHECKS = 1;

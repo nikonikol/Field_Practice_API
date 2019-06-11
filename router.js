@@ -6,39 +6,23 @@ var infoquery = require('./mysql')
 //加载文件
 var fs = require('fs')
 
+// const promisify = require('util').promisify
+
+function mypinfoquery(sql) {
+    return new Promise(function (resolve, reject) {
+        infoquery(sql, (err, data) => {
+            if (err) {
+                reject(err)
+            }
+            resolve(data)
+        })
+    })
+}
+
+
 var router = express.Router()
 
-
-
-
 console.log('jiazai')
-// router.get('/test', function (req, res) {
-//     //console.log(req.query)
-//     testdata.find({
-//         dataname:'Tem',
-//         data:123
-//     },function(err,data){
-//         if(err){
-//             return res.status(500).json({
-//                 err_code: 500,
-//                 message: err.message
-//             })           
-//         }
-//         console.log(data)
-//         res.status(200).json({
-//             err_code: 0,
-//             message: data
-//         })
-
-//     })
-
-//    // res.redirect('/students')
-
-// })
-
-
-//返回是否成功，接收数据为账号和密码
-
 
 router.post('/IscheckLogin', function (req, res) {
 
@@ -516,50 +500,48 @@ router.post('/Studentsubmit', function (req, res) {
     }
 
 })
+
 //老师批改测试结果
 router.post('/ExamCorrection', function (req, res) {
-    var examarry =eval(req.body.StudentGrade)
+    var examarry = eval(req.body.StudentGrade)
     console.log(examarry)
     var UserId
     var TaskId
     var TestId
     var Grade
     var Evaluate
-    for (i = 0; i < examarry.length; i++) {
-        exam = examarry[i] 
-        UserId = exam.UserId
-        TaskId = exam.TaskId
-        TestId = exam.TestId
-        Grade = exam.Grade
-        Evaluate = exam.Evaluate
-        console.log(exam)
-        try {
-            sql = "UPDATE testresult SET Grade=" + Grade + ",State=1,Evaluate='" + Evaluate + "'  WHERE UserId='" + UserId + "' AND TaskId=" + TaskId + " AND TestId=" + TestId
-            infoquery(sql, function (err, data) {
-                if (err) {
-                    console.log(err)
+    var SumGrade =0
+        ;(async()=>{
+            try{
+                for (i = 0; i < examarry.length; i++) {
+                    exam = examarry[i]
+                    UserId = exam.UserId
+                    TaskId = exam.TaskId
+                    TestId = exam.TestId
+                    Grade = exam.Grade
+                    Evaluate = exam.Evaluate
+                    await mypinfoquery("UPDATE testresult SET Grade=" + Grade + ",State=1,Evaluate='" + Evaluate + "' WHERE UserId='" + UserId + "' AND TaskId=" + TaskId + " AND TestId=" + TestId)         
+                    const queryresult= await mypinfoquery(`SELECT testresult.Grade FROM testresult WHERE testresult.TaskId=` + TaskId + ` AND testresult.UserId ='` + UserId + `'`)
+                    SumGrade = 0
+                    for(j=0;j<queryresult.length;j++){
+                        SumGrade+=queryresult[j].Grade
+                    }
+                    await mypinfoquery("UPDATE testresult SET FinallyGrade=" + SumGrade + "  WHERE UserId='" + UserId + "' AND TaskId=" + TaskId)
                 }
-
-            })
-        } catch (err) {
-            console.log('err')
-            res.status(500).json({
-                code: 2,
-                err: err.message,
-                message: []
-            })
-        }
-    }
-
-    return res.status(200).json({
-        code: 0,
-        error: null,
-        message: []
-    })
-
-
-
-
+                return res.status(200).json({
+                    code: 0,
+                    error: null,
+                    message: []
+                })
+            }
+            catch (e) {
+                return res.status(500).json({
+                    code: 2,
+                    err: e.message,
+                    message: []
+                })
+            }
+        })()
 })
 
 //由学生学号，查询学生全部信息，并返回。
@@ -669,7 +651,7 @@ router.post('/GetUnCheckedTestResultByTestId', function (req, res) {
         testresult.UserId = studentinfo.UserId        
         `
         infoquery(sql, function (err, data) {
-          
+
             if (err) {
                 console.log(err)
             } else {
@@ -706,7 +688,6 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
     var arr = new Array
     console.log(req.body)
     try {
-
         //已经批改
         sql = `SELECT
         studentinfo.Icon,
@@ -730,9 +711,10 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
         testresult.UserId = studentinfo.UserId
         
         `
+        
         infoquery(sql, function (err, data) {
             if (err) {
-                console.log(err)
+
             } else {
                 if (data[0] != undefined) {
 
@@ -759,6 +741,67 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
             message: []
         })
     }
+
+})
+
+//修改密码和信息
+router.post('/ModifyUserInfo', function (req, res) {
+
+    student = req.body
+    UserId = student.UserId
+    OldPassword = student.OldPassword
+    NewPassword = student.NewPassword
+    Icon = student.Icon
+    NickName = student.NickName
+    errmessage = "";
+
+    (async () => {
+        try {
+            if (OldPassword !== "" && NewPassword !== "") {
+                //Password1=data[0].Password
+                const queryresult = await mypinfoquery("SELECT Password FROM studentinfo  WHERE UserId='" + UserId + "'")
+
+                if (queryresult[0].Password === OldPassword) {
+                    await mypinfoquery("UPDATE studentinfo SET Password='" + NewPassword + "' WHERE UserId='" + UserId + "' ")
+                    errmessage = "密码修改成功"
+                    if (Icon !== "") {
+                        await mypinfoquery("UPDATE studentinfo SET Icon='" + Icon + "' WHERE UserId='" + UserId + "' ")
+                        errmessage += " 头像信息修改成功"
+                    }
+                    if (NickName !== "") {
+                        await mypinfoquery("UPDATE studentinfo SET Icon='" + NickName + "' WHERE UserId='" + NickName + "' ")
+                        errmessage += " 昵称信息修改成功"
+                    }
+                } else {
+                    errmessage = "对不起，密码错误，请重新输入"
+
+                }
+            }
+            if (Icon !== "" && OldPassword == "" && NewPassword == "") {
+                await mypinfoquery("UPDATE studentinfo SET Icon='" + Icon + "' WHERE UserId='" + UserId + "' ")
+                errmessage = "个人信息修改成功"
+            }
+            if (NickName !== "" && OldPassword == "" && NewPassword == "") {
+                await mypinfoquery("UPDATE studentinfo SET Icon='" + NickName + "' WHERE UserId='" + NickName + "' ")
+                errmessage = "个人信息修改成功"
+            }
+
+
+            return res.status(200).json({
+                code: 0,
+                err: errmessage,
+                message: []
+            })
+
+        } catch (e) {
+            return res.status(500).json({
+                code: 2,
+                err: e.message,
+                message: []
+            })
+
+        }
+    })()
 
 })
 

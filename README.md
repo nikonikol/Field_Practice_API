@@ -191,7 +191,8 @@
 发送数据：TaskId，TestId，UserId，Grade（学生得分数）
 返回数据：code、error（批改不成功error显示不成功原因）
 
-+ [{
++ {
+	"StudentGrade":	[{
     "UserId": "5120160000",
     "TaskId": 5,
     "TestId": 5,
@@ -207,6 +208,8 @@
     "Grade": 12,
     "Evaluate": "歪歪你这小子天天不学好"
 }]
+
+}
 + {
     "code": 0,
     "error": null,
@@ -308,4 +311,33 @@ SubmitNumber（该test用户学生所有已提交数）、TotalNumber（该test�
         }
     ],
     "count": 2
+}
+
+##ModifyUserInfo
++ 接口说明：修改用户的个人信息
+发送字段：UserId，OldPassword，NewPassword，Icon,NickName；
+限制条件：如果老密码输入正确则给予更新用户信息，否则返回errormsg：旧密码输入错误
+返回信息 code ，errorMsg，Message（为空）
+说明：userid是必须字段，若用户没有修改nickname，那么nickname就为空，代表不需要修改，icon一样，要是更改密码，那么oldpassword也是必须字段，若不改密码，oldpasssword和newpassword都为空
++ {
+    "UserId": "5120160000",
+    "OldPassword": "123",
+    "NewPassword": "456",
+    "Icon": "另一个链接",
+    "NickName": "歪歪真是个小可爱"
+}
+
++ {
+    "code": 0,
+    "error": "",
+    "message": [
+        {
+            "Testid": 1,
+            "TestName": "5120160100",
+            "TaskId": 5,
+            "Content": "waiwai is shabi",
+            "TotalGrade": "5.68",
+            "Deadtime": "2019-07-02T15:34:10.000Z"
+        }
+    ]
 }
