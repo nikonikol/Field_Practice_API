@@ -159,15 +159,38 @@ router.post('/SaveLocationInfom', function (req, res) {
             if (err) {
                 console.log(err)
             } else {
-                if (data[0] != undefined) {
+                console.log(data[0].Location==="")
+                if (data[0] == undefined||data[0].Location==="") {
+                    
+       //如果没有查询到信息，则直接插入
+                    //修改JSON
+                    Location = `{"count":1,"location":[` + Location + `]}`
+                    console.log(Location)
+                    console.log('插入数据')
+
+                    infoquery("INSERT INTO Location (UserId,LastTime,Location,TaskId) VALUES('" + UserId + "','" + LastTime + "','" + Location + "',+'" + TaskId + "')", function (err, data) {
+                        if (err) {
+                            console.log(err)
+                        } else {
+                            return res.status(200).json({
+                                code: 0,
+                                error: err,
+                                message: []
+                            })
+                        }
+                    })
+                } else {
+
                     //如果已经有记录，则进行修改
                     //查询到的'{"count":0,"location":[{"log":1212,"lat":5656.45}]}'
                     var querlocation = data[0].Location
+                    console.log(data[0].Location+'weizhi')
                     //转成JSON对象
                     var locationobject = JSON.parse(data[0].Location)
                     //count进行计数
                     locationobject.count = locationobject.count + 1
                     //再数组中插入所查询的值
+                    console.log(locationobject.location)
                     locationobject.location.push(JSON.parse(Location))
 
                     console.log(locationobject.count)
@@ -189,25 +212,8 @@ router.post('/SaveLocationInfom', function (req, res) {
                         }
                     })
 
-
-                } else {
-
-                    //如果没有查询到信息，则直接插入
-                    //修改JSON
-                    Location = `{"count":1,"location":[` + Location + `]}`
-                    console.log(Location)
-
-                    infoquery("INSERT INTO Location (UserId,LastTime,Location,TaskId) VALUES('" + UserId + "','" + LastTime + "','" + Location + "',+'" + TaskId + "')", function (err, data) {
-                        if (err) {
-                            console.log(err)
-                        } else {
-                            return res.status(200).json({
-                                code: 0,
-                                error: err,
-                                message: []
-                            })
-                        }
-                    })
+                    
+             
 
 
                 }
@@ -782,7 +788,7 @@ router.post('/ModifyUserInfo', function (req, res) {
                 errmessage = "个人信息修改成功"
             }
             if (NickName !== "" && OldPassword == "" && NewPassword == "") {
-                await mypinfoquery("UPDATE studentinfo SET Icon='" + NickName + "' WHERE UserId='" + NickName + "' ")
+                await mypinfoquery("UPDATE studentinfo SET NickName='" + NickName + "' WHERE UserId='" + UserId + "' ")
                 errmessage = "个人信息修改成功"
             }
 
@@ -804,6 +810,37 @@ router.post('/ModifyUserInfo', function (req, res) {
     })()
 
 })
+
+
+//紧急任务EmergencyMuster
+router.post('/EmergencyMuster', function (req, res) {
+
+    var TaskId = req.body.TaskId
+    var EmergencyMuster = req.body.EmergencyMuster
+
+    const sql="UPDATE tasktable SET EmergencyMuster='" + EmergencyMuster + "' WHERE TaskId='" + TaskId + "' "
+
+    ;(async ()=>{
+        try {
+            await mypinfoquery(sql)
+            return res.status(200).json({
+                code: 0,
+                err: "",
+                message: []
+            })
+        } catch (err) {
+            console.log('err')
+            res.status(500).json({
+                code: 2,
+                err: err.message,
+                message: []
+            })
+        }
+    })()
+   
+
+})
+
 
 //把router导出
 module.exports = router
