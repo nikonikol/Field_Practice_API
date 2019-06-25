@@ -323,7 +323,7 @@ SubmitNumber（该test用户学生所有已提交数）、TotalNumber（该test�
     "UserId": "5120160000",
     "OldPassword": "123",
     "NewPassword": "456",
-    "Icon": "另一个链接",
+    "Icon": "是个文件",
     "NickName": "歪歪真是个小可爱"
 }
 
@@ -342,6 +342,10 @@ SubmitNumber（该test用户学生所有已提交数）、TotalNumber（该test�
     ]
 }
 
+详细说明：
+1. 可以只修改昵称和头像
+2. 其他的如果没有就是""
+3. 文件上传不能中止，密码不对也保存文件，但不保存地址
 ##GetIconFile
 - 通过链接访问数据库获取文件
 + {

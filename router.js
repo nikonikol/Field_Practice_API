@@ -797,10 +797,10 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
 router.post('/ModifyUserInfo',upload.single('upload'), function (req, res) {
 
     var file = req.file;
-    var Icon=myHost+':3001/public/upload/'+file.filename
+    var Icon=myHost+':3001/public/'+file.filename
     console.log('文件保存路径：%s',Icon );
 
-    console.log(req.body+"body")
+    //console.log(req.body+"body")
     student = req.body
     UserId = student.UserId
     OldPassword = student.OldPassword
