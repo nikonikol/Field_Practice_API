@@ -6,6 +6,34 @@ var infoquery = require('./mysql')
 //加载文件
 var fs = require('fs')
 
+var multer  = require('multer')
+
+var storge = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'upload/')
+    },
+    filename: function (req, file, cb) {
+        var fileformat = (file.originalname).split('.');
+        cb(null, file.fieldname+'-'+Date.now()+'.'+fileformat[fileformat.length-1]);
+    }
+})
+
+// 创建文件夹
+var createFolder = function(folder){
+    try{
+        // 测试 path 指定的文件或目录的用户权限,我们用来检测文件是否存在
+        // 如果文件路径不存在将会抛出错误"no such file or directory"
+        fs.accessSync(folder); 
+    }catch(e){
+        // 文件夹不存在，以同步的方式创建文件目录。
+        fs.mkdirSync(folder);
+    }  
+}
+
+var uploadFolder = './upload/'
+createFolder(uploadFolder)
+
+var upload = multer({storage: storge})
 // const promisify = require('util').promisify
 
 function mypinfoquery(sql) {
@@ -19,6 +47,21 @@ function mypinfoquery(sql) {
     })
 }
 
+const os = require('os');
+///////////////////获取本机ip///////////////////////
+function getIPAdress() {
+    var interfaces = os.networkInterfaces();
+    for (var devName in interfaces) {
+        var iface = interfaces[devName];
+        for (var i = 0; i < iface.length; i++) {
+            var alias = iface[i];
+            if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+                return alias.address;
+            }
+        }
+    }
+}
+const myHost = getIPAdress();
 
 var router = express.Router()
 
@@ -751,17 +794,22 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
 })
 
 //修改密码和信息
-router.post('/ModifyUserInfo', function (req, res) {
+router.post('/ModifyUserInfo',upload.single('upload'), function (req, res) {
 
+    var file = req.file;
+    var Icon=myHost+':3001/public/upload/'+file.filename
+    console.log('文件保存路径：%s',Icon );
+
+    console.log(req.body+"body")
     student = req.body
     UserId = student.UserId
     OldPassword = student.OldPassword
     NewPassword = student.NewPassword
-    Icon = student.Icon
+    //Icon = student.Icon
     NickName = student.NickName
-    errmessage = "";
-
-    (async () => {
+    errmessage = ""
+    
+    ;(async () => {
         try {
             if (OldPassword !== "" && NewPassword !== "") {
                 //Password1=data[0].Password
@@ -840,6 +888,64 @@ router.post('/EmergencyMuster', function (req, res) {
    
 
 })
+//通过链接访问数据库获取文件
+router.post('/GetIconFile', function (req, res) {
+
+    var Icon = req.body.Icon
+
+    const sql="SELECT Password FROM studentinfo  WHERE UserId='" + UserId + "'"
+
+    ;(async ()=>{
+        try {
+            await mypinfoquery(sql)
+            return res.status(200).json({
+                code: 0,
+                err: "",
+                message: []
+            })
+        } catch (err) {
+            console.log('err')
+            res.status(500).json({
+                code: 2,
+                err: err.message,
+                message: []
+            })
+        }
+    })()
+   
+
+})
+//通过链接访问数据库获取文件
+// router.post('/SaveIconFile',upload.single('upload'), function (req, res,next) {
+
+    
+
+//     console.log(req.body, 'body')
+//     // //console.log(req.files[0], 'body')
+//     // console.log(req.file, 'body')
+//     // console.log(req.files[0], 'body')
+//     const sql="SELECT Password FROM studentinfo  WHERE UserId='" + UserId + "'"
+
+//     ;(async ()=>{
+//         try {
+//            //await mypinfoquery("UPDATE studentinfo SET Icon='" + Icon + "' WHERE UserId='" + UserId + "' ")
+//             return res.status(200).json({
+//                 code: 0,
+//                 err: "",
+//                 message: []
+//             })
+//         } catch (err) {
+//             console.log('err')
+//             res.status(500).json({
+//                 code: 2,
+//                 err: err.message,
+//                 message: []
+//             })
+//         }
+//     })()
+   
+
+// })
 
 
 //把router导出
