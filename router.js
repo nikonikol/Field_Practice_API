@@ -1,13 +1,14 @@
+
+//加载所需模块
 var express = require('express')
-
 var infoquery = require('./mysql')
-//var testdata = require('./modules/testdata')
-
-//加载文件
+var PushInfo = require('./InformationPush')
 var fs = require('fs')
-
-var multer  = require('multer')
-
+var multer = require('multer')
+const os = require('os');
+const myHost = getIPAdress();
+var router = express.Router()
+//上传图片配置
 var storge = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'upload/')
@@ -29,13 +30,13 @@ var createFolder = function(folder){
         fs.mkdirSync(folder);
     }  
 }
-
+//创建文件夹
 var uploadFolder = './upload/'
 createFolder(uploadFolder)
-
 var upload = multer({storage: storge})
 // const promisify = require('util').promisify
 
+//设置asyn
 function mypinfoquery(sql) {
     return new Promise(function (resolve, reject) {
         infoquery(sql, (err, data) => {
@@ -47,7 +48,7 @@ function mypinfoquery(sql) {
     })
 }
 
-const os = require('os');
+
 ///////////////////获取本机ip///////////////////////
 function getIPAdress() {
     var interfaces = os.networkInterfaces();
@@ -55,18 +56,17 @@ function getIPAdress() {
         var iface = interfaces[devName];
         for (var i = 0; i < iface.length; i++) {
             var alias = iface[i];
+            //console.log(alias, '')
             if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
-                return alias.address;
+                //return alias.address;
             }
         }
     }
 }
-const myHost = getIPAdress();
 
-var router = express.Router()
+console.log('Lets go~~')
 
-console.log('jiazai')
-
+//登陆
 router.post('/IscheckLogin', function (req, res) {
 
     console.log(req.body)
@@ -148,6 +148,7 @@ router.post('/SaveTaskInfom', function (req, res) {
 
     var FromTime = req.body.FromTime
     var EndTime = req.body.EndTime
+    var Tag = req.body.Tag
 
     var TaskName = req.body.TaskName
     var Class = req.body.Class
@@ -157,29 +158,131 @@ router.post('/SaveTaskInfom', function (req, res) {
     var Sponsor = req.body.Sponsor
     var TaskState = req.body.TaskState
     console.log(req.body)
-    try {
 
-        infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('" + FromTime + "','" + EndTime + "','" + TaskName + "','" + Class + "','" + Address + "','" + TaskContent + "','" + Sponsor + "'," + TaskState + ")", function (err, data) {
-            if (err) {
-                console.log(err)
-            } else {
-                return res.status(200).json({
-                    code: 0,
-                    error: err,
-                    message: []
-                })
-            }
-        })
-    } catch (err) {
-        console.log('err')
-        res.status(500).json({
+    const sql="INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('" + FromTime + "','" + EndTime + "','" + TaskName + "','" + Class + "','" + Address + "','" + TaskContent + "','" + Sponsor + "'," + TaskState + ")"
+
+    ;(async ()=>{
+        try {
+            await mypinfoquery(sql)
+            var Sendime =Date.parse(FromTime)
+            console.log(Sendime, '1')
+            Sendime= Sendime-7200000
+            console.log(Sendime, '2')
+            PushInfo('通知','老师新发布了一个任务:'+TaskName+'，快来查看吧',561874646000,Tag,0)
+            console.log(Sendime, '4')
+            PushInfo('通知','温馨提示：两个小时之后开始实习'+TaskName+'，请注意时间哦',Sendime,Tag,0)
+            return res.status(200).json({
+                code: 0,
+                err: "",
+                message: []
+            })
+        } catch (err) {
+            console.log(err.message)
+            res.status(500).json({
+                code: 2,
+                err: err.message,
+                message: []
+            })
+        }
+    })()
+
+   
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // try {
+     
+
+    //     infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('" + FromTime + "','" + EndTime + "','" + TaskName + "','" + Class + "','" + Address + "','" + TaskContent + "','" + Sponsor + "'," + TaskState + ")", function (err, data) {
+    //         if (err) {
+    //             console.log(err)
+    //         } else {
+    //             return res.status(200).json({
+    //                 code: 0,
+    //                 error: err,
+    //                 message: []
+    //             })
+    //         }
+    //     })
+    // } catch (err) {
+    //     console.log('err')
+    //     res.status(500).json({
+    //         code: 2,
+    //         err: err.message,
+    //         message: []
+    //     })
+    // }
+
+})
+
+//通过链接访问数据库获取文件
+router.post('/PushInformation', function (req, res) {
+
+    var Tittle = req.body.Tittle
+    //var Content = req.body.Content
+    var Sendime = req.body.Sendime
+    var Tag = req.body.Tag
+    var Type = req.body.Type
+
+    try{
+        if(Type===0){
+            PushInfo('通知','老师新发布了一个任务，快来查看吧','2019-06-28 22:50:30',Tag)
+            PushInfo('通知','温馨提示：两个小时之后开始实习，请注意时间哦',Sendime,Tag)
+        }
+        else if(Type===1){
+            PushInfo(Tittle,Content,'2019-06-28 22:50:30',Tag)
+        }
+    }
+  
+    catch(e){
+        return res.status(500).json({
             code: 2,
-            err: err.message,
+            err: e.message,
             message: []
         })
     }
 
+    return res.status(200).json({
+        code: 0,
+        err: "",
+        message: []
+    })
+
+    // const sql="SELECT Password FROM studentinfo  WHERE UserId='" + UserId + "'"
+
+    // ;(async ()=>{
+    //     try {
+    //         await mypinfoquery(sql)
+    //         return res.status(200).json({
+    //             code: 0,
+    //             err: "",
+    //             message: []
+    //         })
+    //     } catch (err) {
+    //         console.log('err')
+    //         res.status(500).json({
+    //             code: 2,
+    //             err: err.message,
+    //             message: []
+    //         })
+    //     }
+    // })()
+   
+
 })
+
 //保存坐标信息到数据库
 router.post('/SaveLocationInfom', function (req, res) {
 
@@ -275,8 +378,6 @@ router.post('/SaveLocationInfom', function (req, res) {
 
 
 //由任务ID，查询学生查询位置信息全部信息，并返回。
-
-
 router.post('/SearchLocation', function (req, res) {
     var TaskId = req.body.TaskId
     var sql = null
@@ -858,26 +959,27 @@ router.post('/ModifyUserInfo',upload.single('upload'), function (req, res) {
     })()
 
 })
-
-
 //紧急任务EmergencyMuster
 router.post('/EmergencyMuster', function (req, res) {
 
     var TaskId = req.body.TaskId
-    var EmergencyMuster = req.body.EmergencyMuster
+    var Tag = req.body.Tag
+    var location = req.body.Location
 
-    const sql="UPDATE tasktable SET EmergencyMuster='" + EmergencyMuster + "' WHERE TaskId='" + TaskId + "' "
+    const sql="UPDATE tasktable SET EmergencyMuster='" + location + "' WHERE TaskId='" + TaskId + "' "
 
     ;(async ()=>{
         try {
             await mypinfoquery(sql)
+            PushInfo('紧急通知',location,561874646000,Tag,1)
+
             return res.status(200).json({
                 code: 0,
                 err: "",
                 message: []
             })
         } catch (err) {
-            console.log('err')
+            console.log(err)
             res.status(500).json({
                 code: 2,
                 err: err.message,
@@ -915,6 +1017,7 @@ router.post('/GetIconFile', function (req, res) {
    
 
 })
+
 //通过链接访问数据库获取文件
 // router.post('/SaveIconFile',upload.single('upload'), function (req, res,next) {
 
