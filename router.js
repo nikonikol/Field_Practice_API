@@ -145,7 +145,7 @@ router.post('/StudentInfom', function (req, res) {
 
 //保存任务信息到数据库
 router.post('/SaveTaskInfom', function (req, res) {
-
+    
     var FromTime = req.body.FromTime
     var EndTime = req.body.EndTime
     var Tag = req.body.Tag
@@ -157,20 +157,33 @@ router.post('/SaveTaskInfom', function (req, res) {
     //number
     var Sponsor = req.body.Sponsor
     var TaskState = req.body.TaskState
+   
     console.log(req.body)
 
     const sql="INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('" + FromTime + "','" + EndTime + "','" + TaskName + "','" + Class + "','" + Address + "','" + TaskContent + "','" + Sponsor + "'," + TaskState + ")"
+    const searchsql="SELECT Name FROM studentinfo WHERE UserId='" + Sponsor + "'"
+    const searchtaskid="SELECT TaskId FROM tasktable WHERE TaskName='" + TaskName + "'"
 
     ;(async ()=>{
         try {
             await mypinfoquery(sql)
+            const searchresult= await mypinfoquery(searchsql)
+            const queryresult= await mypinfoquery(searchtaskid)
             var Sendime =Date.parse(FromTime)
-            console.log(Sendime, '1')
-            Sendime= Sendime-7200000
-            console.log(Sendime, '2')
-            PushInfo('通知','老师新发布了一个任务:'+TaskName+'，快来查看吧',561874646000,Tag,0)
-            console.log(Sendime, '4')
-            PushInfo('通知','温馨提示：两个小时之后开始实习'+TaskName+'，请注意时间哦',Sendime,Tag,0)
+            var SendEndTime =Date.parse(EndTime)
+            PreSendime= Sendime-7200000
+            PushInfo('通知',searchresult[0].Name+'新发布了一个任务:'+TaskName+'，快来查看吧',561874646000,Tag,0,null)
+            PushInfo('通知','温馨提示：两个小时之后开始'+searchresult[0].Name+'发布的实习任务'+TaskName+'，请注意时间哦',PreSendime,Tag,0,null)
+            var body={
+                'TaskName':TaskName,
+                'Class':Class,
+                'TaskContent':TaskContent,
+                'Sponsor':Sponsor,
+                'TaskId':queryresult[0].TaskId.toString()
+            }
+            console.log(body, '外边')
+            PushInfo('任务开始',"任务开始",Sendime,Tag,1,body)
+            PushInfo('任务结束',"任务结束",SendEndTime,Tag,1,body)
             return res.status(200).json({
                 code: 0,
                 err: "",
@@ -185,21 +198,6 @@ router.post('/SaveTaskInfom', function (req, res) {
             })
         }
     })()
-
-   
-   
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     // try {
@@ -336,14 +334,13 @@ router.post('/SaveLocationInfom', function (req, res) {
                     //count进行计数
                     locationobject.count = locationobject.count + 1
                     //再数组中插入所查询的值
-                    console.log(locationobject.location)
+                    //console.log(locationobject.location)
                     locationobject.location.push(JSON.parse(Location))
-
-                    console.log(locationobject.count)
-                    console.log(locationobject.location)
+                    //console.log(locationobject.count)
+                    //console.log(locationobject.location)
                     Location = JSON.stringify(locationobject)
                     Location = JSON.stringify(Location)
-                    console.log(Location)
+                    //console.log(Location)
                     updatesql = `UPDATE Location SET Location=` + Location + ` WHERE location.TaskId = "` + TaskId + `" AND location.UserId = "` + UserId + `"`
                     infoquery(updatesql, function (err, data) {
 
@@ -357,11 +354,6 @@ router.post('/SaveLocationInfom', function (req, res) {
                             })
                         }
                     })
-
-                    
-             
-
-
                 }
             }
         })
@@ -617,6 +609,7 @@ router.post('/SubmitExam', function (req, res) {
     }
 
 })
+
 //学生提交测试结果
 router.post('/Studentsubmit', function (req, res) {
 
@@ -967,11 +960,17 @@ router.post('/EmergencyMuster', function (req, res) {
     var location = req.body.Location
 
     const sql="UPDATE tasktable SET EmergencyMuster='" + location + "' WHERE TaskId='" + TaskId + "' "
-
+    const searchsql="SELECT Name FROM studentinfo,tasktable WHERE TaskId=" + TaskId + " AND tasktable.Sponsor = studentinfo.UserId"
     ;(async ()=>{
         try {
             await mypinfoquery(sql)
-            PushInfo('紧急通知',location,561874646000,Tag,1)
+            const queryresult= await mypinfoquery(searchsql)
+            const jsonname={
+                'TeacherName':queryresult[0].Name,
+                'location':location
+            }
+            console.log(queryresult[0].Name, '')
+            PushInfo('紧急通知',queryresult[0].Name+"发布了紧急集合",561874646000,Tag,1,jsonname)
 
             return res.status(200).json({
                 code: 0,
@@ -1004,6 +1003,33 @@ router.post('/GetIconFile', function (req, res) {
                 code: 0,
                 err: "",
                 message: []
+            })
+        } catch (err) {
+            console.log('err')
+            res.status(500).json({
+                code: 2,
+                err: err.message,
+                message: []
+            })
+        }
+    })()
+   
+
+})
+//根据班级名称查询正在进行的任务， 返回所有信息
+router.post('/GetCurTaskByClass', function (req, res) {
+
+    var StudentClass = req.body.Class
+
+    const sql="SELECT*FROM tasktable WHERE tasktable.Class LIKE '%"+StudentClass+"%' AND tasktable.TaskState=1"
+
+    ;(async ()=>{
+        try {
+            const result =await mypinfoquery(sql)
+            return res.status(200).json({
+                code: 0,
+                err: "",
+                message: result
             })
         } catch (err) {
             console.log('err')

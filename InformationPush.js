@@ -119,8 +119,8 @@ action.actionType = Xinge.ACTION_TYPE_ACTIVITY; //打开activity或app本身
 //     console.log(result);
 // });
 
-function PushInfo(Title, Content, Sendime, Tag,Type) {
-    console.log(Content, '')
+function PushInfo(Title, Content, Sendime, Tag,Type,customContent) {
+    //console.log(Content, '里边')
     //Tag为数组
     var androidMessage = new Xinge.AndroidMessage();
     if(Type===0){
@@ -135,6 +135,8 @@ function PushInfo(Title, Content, Sendime, Tag,Type) {
     androidMessage.action = action; //动作如上
     androidMessage.sendTime = Sendime / 1000;
     androidMessage.expireTime = 0; //不储存
+    androidMessage.customContent = customContent;
+
     //androidMessage.acceptTime.push(new Xinge.TimeInterval(0, 0, 23, 59));
     //androidMessage.customContent = {
     //	'name': 'huangnaiang'
