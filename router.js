@@ -111,7 +111,7 @@ router.post('/StudentInfom', function (req, res) {
     console.log(req.body)
     try {
 
-        infoquery("SELECT * FROM studentinfo WHERE Name='" + username + "'", function (err, data) {
+        infoquery("SELECT * FROM studentinfo WHERE Name Like'%" + username + "%'", function (err, data) {
             if (err) {
                 console.log(err)
             } else {
