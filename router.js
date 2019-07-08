@@ -111,7 +111,7 @@ router.post('/StudentInfom', function (req, res) {
     console.log(req.body)
     try {
 
-        infoquery("SELECT * FROM studentinfo WHERE UserId='" + username + "'", function (err, data) {
+        infoquery("SELECT * FROM studentinfo WHERE Name='" + username + "'", function (err, data) {
             if (err) {
                 console.log(err)
             } else {
@@ -120,7 +120,7 @@ router.post('/StudentInfom', function (req, res) {
                     return res.status(200).json({
                         code: 0,
                         error: '',
-                        message: data[0]
+                        message: data
                     })
 
                 } else {
