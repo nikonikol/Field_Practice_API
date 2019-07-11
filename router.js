@@ -1044,6 +1044,68 @@ router.post('/GetCurTaskByClass', function (req, res) {
 
 })
 
+//删除任务信息
+router.post('/DeleteTask', function (req, res) {
+
+    var TaskId = req.body.TaskId
+    console.log(TaskId)
+    //SQL语句
+    const deletetask="DELETE FROM tasktable WHERE tasktable.TaskId='" + TaskId + "'"
+    const deletetest="DELETE FROM testtable WHERE testtable.TaskId='" + TaskId + "'"
+
+    ;(async ()=>{
+        try {
+            //执行语句
+            await mypinfoquery(deletetask)
+            await mypinfoquery(deletetest)
+            return res.status(200).json({
+                code: 0,
+                err: "",
+                message: "删除成功"
+            })
+        } catch (err) {
+            console.log('err')
+            res.status(500).json({
+                code: 2,
+                err: err.message,
+                message: []
+            })
+        }
+    })()
+})
+
+
+//删除任务下的测试信息
+router.post('/DeleteTest', function (req, res) {
+
+    var TaskId = req.body.TaskId
+    var TestId = req.body.TestId
+
+    const deletetest="DELETE FROM testtable WHERE testtable.TaskId='" + TaskId + "'AND testtable.TestId='" + TestId + "'"
+
+    ;(async ()=>{
+        try {
+            await mypinfoquery(deletetest)
+            return res.status(200).json({
+                code: 0,
+                err: "",
+                message: '删除成功'
+            })
+        } catch (err) {
+            console.log('err')
+            res.status(500).json({
+                code: 2,
+                err: err.message,
+                message: []
+            })
+        }
+    })()
+})
+
+
+
+
+
 //通过链接访问数据库获取文件
 // router.post('/SaveIconFile',upload.single('upload'), function (req, res,next) {
 
