@@ -1,4 +1,3 @@
-
 //加载所需模块
 var express = require('express')
 var infoquery = require('./mysql')
@@ -7,6 +6,7 @@ var fs = require('fs')
 var multer = require('multer')
 const os = require('os');
 const myHost = getIPAdress();
+var schedule = require("node-schedule")
 var router = express.Router()
 //上传图片配置
 var storge = multer.diskStorage({
@@ -15,25 +15,27 @@ var storge = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         var fileformat = (file.originalname).split('.');
-        cb(null, file.fieldname+'-'+Date.now()+'.'+fileformat[fileformat.length-1]);
+        cb(null, file.fieldname + '-' + Date.now() + '.' + fileformat[fileformat.length - 1]);
     }
 })
 
 // 创建文件夹
-var createFolder = function(folder){
-    try{
+var createFolder = function (folder) {
+    try {
         // 测试 path 指定的文件或目录的用户权限,我们用来检测文件是否存在
         // 如果文件路径不存在将会抛出错误"no such file or directory"
-        fs.accessSync(folder); 
-    }catch(e){
+        fs.accessSync(folder);
+    } catch (e) {
         // 文件夹不存在，以同步的方式创建文件目录。
         fs.mkdirSync(folder);
-    }  
+    }
 }
 //创建文件夹
 var uploadFolder = './upload/'
 createFolder(uploadFolder)
-var upload = multer({storage: storge})
+var upload = multer({
+    storage: storge
+})
 // const promisify = require('util').promisify
 
 //设置asyn
@@ -145,7 +147,7 @@ router.post('/StudentInfom', function (req, res) {
 
 //保存任务信息到数据库
 router.post('/SaveTaskInfom', function (req, res) {
-    
+
     var FromTime = req.body.FromTime
     var EndTime = req.body.EndTime
     var Tag = req.body.Tag
@@ -157,9 +159,27 @@ router.post('/SaveTaskInfom', function (req, res) {
     //number
     var Sponsor = req.body.Sponsor
     var TaskState = req.body.TaskState
-   
+    var Isexist=false
     console.log(req.body)
 
+    ;(async () => {
+        const searchtaskid="SELECT TaskId FROM tasktable WHERE TaskName='" + TaskName + "'"
+        var result1=await mypinfoquery(searchtaskid)
+        //console.log(result1[0].TaskId,'d')
+
+        if(result1[0]!=undefined){
+            console.log('已经存在')
+            Isexist=true
+        }
+    })()
+
+    if(!Isexist){
+        schedule.scheduleJob(EndTime, function () {
+            (async () => {
+                await mypinfoquery("UPDATE tasktable SET TaskState=1 WHERE TaskName='" + TaskName + "' ")
+            })()
+            console.log('执行成功啦', TaskName)
+        });
     const sql="INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('" + FromTime + "','" + EndTime + "','" + TaskName + "','" + Class + "','" + Address + "','" + TaskContent + "','" + Sponsor + "'," + TaskState + ")"
     const searchsql="SELECT Name FROM studentinfo WHERE UserId='" + Sponsor + "'"
     const searchtaskid="SELECT TaskId FROM tasktable WHERE TaskName='" + TaskName + "'"
@@ -198,10 +218,19 @@ router.post('/SaveTaskInfom', function (req, res) {
             })
         }
     })()
+    }
+  
+else{
+    return res.status(200).json({
+        code: 0,
+        err: "任务名称已经存在",
+        message: []
+    })
+}
 
 
     // try {
-     
+
 
     //     infoquery("INSERT INTO tasktable (FromTime,EndTime,TaskName,Class,Address,TaskContent,Sponsor,TaskState) VALUES('" + FromTime + "','" + EndTime + "','" + TaskName + "','" + Class + "','" + Address + "','" + TaskContent + "','" + Sponsor + "'," + TaskState + ")", function (err, data) {
     //         if (err) {
@@ -234,17 +263,14 @@ router.post('/PushInformation', function (req, res) {
     var Tag = req.body.Tag
     var Type = req.body.Type
 
-    try{
-        if(Type===0){
-            PushInfo('通知','老师新发布了一个任务，快来查看吧','2019-06-28 22:50:30',Tag)
-            PushInfo('通知','温馨提示：两个小时之后开始实习，请注意时间哦',Sendime,Tag)
+    try {
+        if (Type === 0) {
+            PushInfo('通知', '老师新发布了一个任务，快来查看吧', '2019-06-28 22:50:30', Tag)
+            PushInfo('通知', '温馨提示：两个小时之后开始实习，请注意时间哦', Sendime, Tag)
+        } else if (Type === 1) {
+            PushInfo(Tittle, Content, '2019-06-28 22:50:30', Tag)
         }
-        else if(Type===1){
-            PushInfo(Tittle,Content,'2019-06-28 22:50:30',Tag)
-        }
-    }
-  
-    catch(e){
+    } catch (e) {
         return res.status(500).json({
             code: 2,
             err: e.message,
@@ -277,7 +303,7 @@ router.post('/PushInformation', function (req, res) {
     //         })
     //     }
     // })()
-   
+
 
 })
 
@@ -303,10 +329,10 @@ router.post('/SaveLocationInfom', function (req, res) {
             if (err) {
                 console.log(err)
             } else {
-                console.log(data[0].Location==="")
-                if (data[0] == undefined||data[0].Location==="") {
-                    
-       //如果没有查询到信息，则直接插入
+                console.log(data[0].Location === "")
+                if (data[0] == undefined || data[0].Location === "") {
+
+                    //如果没有查询到信息，则直接插入
                     //修改JSON
                     Location = `{"count":1,"location":[` + Location + `]}`
                     console.log(Location)
@@ -328,7 +354,7 @@ router.post('/SaveLocationInfom', function (req, res) {
                     //如果已经有记录，则进行修改
                     //查询到的'{"count":0,"location":[{"log":1212,"lat":5656.45}]}'
                     var querlocation = data[0].Location
-                    console.log(data[0].Location+'weizhi')
+                    console.log(data[0].Location + 'weizhi')
                     //转成JSON对象
                     var locationobject = JSON.parse(data[0].Location)
                     //count进行计数
@@ -653,38 +679,37 @@ router.post('/ExamCorrection', function (req, res) {
     var TestId
     var Grade
     var Evaluate
-    var SumGrade =0
-        ;(async()=>{
-            try{
-                for (i = 0; i < examarry.length; i++) {
-                    exam = examarry[i]
-                    UserId = exam.UserId
-                    TaskId = exam.TaskId
-                    TestId = exam.TestId
-                    Grade = exam.Grade
-                    Evaluate = exam.Evaluate
-                    await mypinfoquery("UPDATE testresult SET Grade=" + Grade + ",State=1,Evaluate='" + Evaluate + "' WHERE UserId='" + UserId + "' AND TaskId=" + TaskId + " AND TestId=" + TestId)         
-                    const queryresult= await mypinfoquery(`SELECT testresult.Grade FROM testresult WHERE testresult.TaskId=` + TaskId + ` AND testresult.UserId ='` + UserId + `'`)
-                    SumGrade = 0
-                    for(j=0;j<queryresult.length;j++){
-                        SumGrade+=queryresult[j].Grade
-                    }
-                    await mypinfoquery("UPDATE testresult SET FinallyGrade=" + SumGrade + "  WHERE UserId='" + UserId + "' AND TaskId=" + TaskId)
+    var SumGrade = 0;
+    (async () => {
+        try {
+            for (i = 0; i < examarry.length; i++) {
+                exam = examarry[i]
+                UserId = exam.UserId
+                TaskId = exam.TaskId
+                TestId = exam.TestId
+                Grade = exam.Grade
+                Evaluate = exam.Evaluate
+                await mypinfoquery("UPDATE testresult SET Grade=" + Grade + ",State=1,Evaluate='" + Evaluate + "' WHERE UserId='" + UserId + "' AND TaskId=" + TaskId + " AND TestId=" + TestId)
+                const queryresult = await mypinfoquery(`SELECT testresult.Grade FROM testresult WHERE testresult.TaskId=` + TaskId + ` AND testresult.UserId ='` + UserId + `'`)
+                SumGrade = 0
+                for (j = 0; j < queryresult.length; j++) {
+                    SumGrade += queryresult[j].Grade
                 }
-                return res.status(200).json({
-                    code: 0,
-                    error: null,
-                    message: []
-                })
+                await mypinfoquery("UPDATE testresult SET FinallyGrade=" + SumGrade + "  WHERE UserId='" + UserId + "' AND TaskId=" + TaskId)
             }
-            catch (e) {
-                return res.status(500).json({
-                    code: 2,
-                    err: e.message,
-                    message: []
-                })
-            }
-        })()
+            return res.status(200).json({
+                code: 0,
+                error: null,
+                message: []
+            })
+        } catch (e) {
+            return res.status(500).json({
+                code: 2,
+                err: e.message,
+                message: []
+            })
+        }
+    })()
 })
 
 //由学生学号，查询学生全部信息，并返回。
@@ -854,7 +879,7 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
         testresult.UserId = studentinfo.UserId
         
         `
-        
+
         infoquery(sql, function (err, data) {
             if (err) {
 
@@ -888,11 +913,11 @@ router.post('/GetCheckedTestResultByTestId', function (req, res) {
 })
 
 //修改密码和信息
-router.post('/ModifyUserInfo',upload.single('upload'), function (req, res) {
+router.post('/ModifyUserInfo', upload.single('upload'), function (req, res) {
 
     var file = req.file;
-    var Icon=myHost+':3001/public/'+file.filename
-    console.log('文件保存路径：%s',Icon );
+    var Icon = myHost + ':3001/public/' + file.filename
+    console.log('文件保存路径：%s', Icon);
 
     //console.log(req.body+"body")
     student = req.body
@@ -902,8 +927,9 @@ router.post('/ModifyUserInfo',upload.single('upload'), function (req, res) {
     //Icon = student.Icon
     NickName = student.NickName
     errmessage = ""
-    
-    ;(async () => {
+
+    ;
+    (async () => {
         try {
             if (OldPassword !== "" && NewPassword !== "") {
                 //Password1=data[0].Password
@@ -959,18 +985,18 @@ router.post('/EmergencyMuster', function (req, res) {
     var Tag = req.body.Tag
     var location = req.body.Location
 
-    const sql="UPDATE tasktable SET EmergencyMuster='" + location + "' WHERE TaskId='" + TaskId + "' "
-    const searchsql="SELECT Name FROM studentinfo,tasktable WHERE TaskId=" + TaskId + " AND tasktable.Sponsor = studentinfo.UserId"
-    ;(async ()=>{
+    const sql = "UPDATE tasktable SET EmergencyMuster='" + location + "' WHERE TaskId='" + TaskId + "' "
+    const searchsql = "SELECT Name FROM studentinfo,tasktable WHERE TaskId=" + TaskId + " AND tasktable.Sponsor = studentinfo.UserId";
+    (async () => {
         try {
             await mypinfoquery(sql)
-            const queryresult= await mypinfoquery(searchsql)
-            const jsonname={
-                'TeacherName':queryresult[0].Name,
-                'location':location
+            const queryresult = await mypinfoquery(searchsql)
+            const jsonname = {
+                'TeacherName': queryresult[0].Name,
+                'location': location
             }
             console.log(queryresult[0].Name, '')
-            PushInfo('紧急通知',queryresult[0].Name+"发布了紧急集合",561874646000,Tag,1,jsonname)
+            PushInfo('紧急通知', queryresult[0].Name + "发布了紧急集合", 561874646000, Tag, 1, jsonname)
 
             return res.status(200).json({
                 code: 0,
@@ -986,7 +1012,7 @@ router.post('/EmergencyMuster', function (req, res) {
             })
         }
     })()
-   
+
 
 })
 //通过链接访问数据库获取文件
@@ -994,9 +1020,10 @@ router.post('/GetIconFile', function (req, res) {
 
     var Icon = req.body.Icon
 
-    const sql="SELECT Password FROM studentinfo  WHERE UserId='" + UserId + "'"
+    const sql = "SELECT Password FROM studentinfo  WHERE UserId='" + UserId + "'"
 
-    ;(async ()=>{
+    ;
+    (async () => {
         try {
             await mypinfoquery(sql)
             return res.status(200).json({
@@ -1013,7 +1040,7 @@ router.post('/GetIconFile', function (req, res) {
             })
         }
     })()
-   
+
 
 })
 //根据班级名称查询正在进行的任务， 返回所有信息
@@ -1021,11 +1048,12 @@ router.post('/GetCurTaskByClass', function (req, res) {
 
     var StudentClass = req.body.Class
 
-    const sql="SELECT*FROM tasktable WHERE tasktable.Class LIKE '%"+StudentClass+"%' AND tasktable.TaskState=1"
+    const sql = "SELECT*FROM tasktable WHERE tasktable.Class LIKE '%" + StudentClass + "%' AND tasktable.TaskState=1"
 
-    ;(async ()=>{
+    ;
+    (async () => {
         try {
-            const result =await mypinfoquery(sql)
+            const result = await mypinfoquery(sql)
             return res.status(200).json({
                 code: 0,
                 err: "",
@@ -1040,7 +1068,7 @@ router.post('/GetCurTaskByClass', function (req, res) {
             })
         }
     })()
-   
+
 
 })
 
@@ -1050,10 +1078,11 @@ router.post('/DeleteTask', function (req, res) {
     var TaskId = req.body.TaskId
     console.log(TaskId)
     //SQL语句
-    const deletetask="DELETE FROM tasktable WHERE tasktable.TaskId='" + TaskId + "'"
-    const deletetest="DELETE FROM testtable WHERE testtable.TaskId='" + TaskId + "'"
+    const deletetask = "DELETE FROM tasktable WHERE tasktable.TaskId='" + TaskId + "'"
+    const deletetest = "DELETE FROM testtable WHERE testtable.TaskId='" + TaskId + "'"
 
-    ;(async ()=>{
+    ;
+    (async () => {
         try {
             //执行语句
             await mypinfoquery(deletetask)
@@ -1081,9 +1110,10 @@ router.post('/DeleteTest', function (req, res) {
     var TaskId = req.body.TaskId
     var TestId = req.body.TestId
 
-    const deletetest="DELETE FROM testtable WHERE testtable.TaskId='" + TaskId + "'AND testtable.TestId='" + TestId + "'"
+    const deletetest = "DELETE FROM testtable WHERE testtable.TaskId='" + TaskId + "'AND testtable.TestId='" + TestId + "'"
 
-    ;(async ()=>{
+    ;
+    (async () => {
         try {
             await mypinfoquery(deletetest)
             return res.status(200).json({
@@ -1109,7 +1139,7 @@ router.post('/DeleteTest', function (req, res) {
 //通过链接访问数据库获取文件
 // router.post('/SaveIconFile',upload.single('upload'), function (req, res,next) {
 
-    
+
 
 //     console.log(req.body, 'body')
 //     // //console.log(req.files[0], 'body')
@@ -1134,7 +1164,7 @@ router.post('/DeleteTest', function (req, res) {
 //             })
 //         }
 //     })()
-   
+
 
 // })
 
